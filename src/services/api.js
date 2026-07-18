@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Configuración base de axios
-const API_BASE_URL = 'https://apievaluacion.guateaaps.com/api';
+const API_BASE_URL = 'http://localhost:8000/api';
 
 
 const api = axios.create({
