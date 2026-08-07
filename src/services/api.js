@@ -372,6 +372,11 @@ export const studentService = {
   getMyCourses: async () => {
     const response = await api.get('/student/my-courses');
     return response.data.data;
+  },
+
+  getMyGrades: async () => {
+    const response = await api.get('/student/my-grades');
+    return response.data.data;
   }
 };
 
