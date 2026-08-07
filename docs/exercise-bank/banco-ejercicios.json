@@ -1,0 +1,1409 @@
+{
+  "_schema": {
+    "descripcion": "Banco de ejercicios semilla para el microservicio de IA (generación RF3 / evaluación RF5). Cada tema agrupa ejercicios de opción múltiple y respuesta corta para 4to bachillerato, curso de Computación.",
+    "campos_ejercicio": {
+      "id": "identificador único del ejercicio",
+      "tipo": "opcion_multiple | respuesta_corta",
+      "enunciado": "texto de la pregunta",
+      "opciones": "solo en opcion_multiple: lista de alternativas",
+      "respuesta_correcta": "opción correcta (opcion_multiple) o respuesta modelo (respuesta_corta)",
+      "respuestas_alternativas": "solo en respuesta_corta: formulaciones válidas adicionales, usadas para entrenar/calibrar el umbral de similitud semántica del embedder de TensorFlow",
+      "dificultad": "basico | intermedio | avanzado",
+      "retroalimentacion_correcta": "mensaje cuando el alumno acierta",
+      "retroalimentacion_incorrecta": "mensaje específico de qué le faltó o en qué se equivocó, no solo 'incorrecto'"
+    }
+  },
+  "temas": [
+    {
+      "categoria": "excel",
+      "nombre_tema": "Microsoft Excel",
+      "competencia": "Manejo de hojas de cálculo: celdas, fórmulas y funciones básicas",
+      "conceptos_clave": ["celdas, filas y columnas", "fórmulas básicas", "funciones SUMA/PROMEDIO/SI/BUSCARV", "referencias de celda", "ordenar y filtrar"],
+      "ejercicios": [
+        {
+          "id": "excel-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es una celda en Excel?",
+          "opciones": [
+            "La intersección entre una fila y una columna",
+            "Un tipo de gráfico",
+            "El nombre de un archivo de Excel",
+            "Una fórmula matemática"
+          ],
+          "respuesta_correcta": "La intersección entre una fila y una columna",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto. Cada celda se identifica por su columna (letra) y fila (número), por ejemplo A1.",
+          "retroalimentacion_incorrecta": "Repasa el concepto de celda: es donde se cruzan una fila y una columna, no un gráfico ni un archivo."
+        },
+        {
+          "id": "excel-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué función usarías para sumar automáticamente un rango de celdas, por ejemplo de A1 a A10?",
+          "opciones": ["=PROMEDIO(A1:A10)", "=SUMA(A1:A10)", "=CONTAR(A1:A10)", "=MAX(A1:A10)"],
+          "respuesta_correcta": "=SUMA(A1:A10)",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, =SUMA(A1:A10) suma todos los valores del rango indicado.",
+          "retroalimentacion_incorrecta": "Recuerda que SUMA suma valores, PROMEDIO saca el promedio y CONTAR cuenta celdas con datos; para sumar un rango es =SUMA()."
+        },
+        {
+          "id": "excel-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué resultado devuelve la función =SI(A1>10;\"Aprobado\";\"Reprobado\") si A1 vale 15?",
+          "opciones": ["Aprobado", "Reprobado", "15", "Error"],
+          "respuesta_correcta": "Aprobado",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, como 15 es mayor que 10, la condición se cumple y devuelve 'Aprobado'.",
+          "retroalimentacion_incorrecta": "La función SI evalúa la condición A1>10; como 15 sí es mayor que 10, el resultado es 'Aprobado', no las otras opciones."
+        },
+        {
+          "id": "excel-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Para qué se utiliza la función BUSCARV (VLOOKUP) en Excel?",
+          "opciones": [
+            "Para buscar un valor en la primera columna de una tabla y devolver un dato relacionado de otra columna",
+            "Para sumar automáticamente una columna completa",
+            "Para cambiar el color de una celda según su valor",
+            "Para ordenar una lista alfabéticamente"
+          ],
+          "respuesta_correcta": "Para buscar un valor en la primera columna de una tabla y devolver un dato relacionado de otra columna",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, BUSCARV busca un valor en una columna y devuelve un dato de la misma fila en otra columna.",
+          "retroalimentacion_incorrecta": "Esas otras opciones describen SUMA, formato condicional y ordenar; BUSCARV busca un valor y devuelve un dato relacionado de otra columna."
+        },
+        {
+          "id": "excel-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "Explica con tus palabras qué hace la función PROMEDIO en Excel.",
+          "respuesta_correcta": "Calcula el promedio (media aritmética) de un conjunto de valores numéricos seleccionados.",
+          "respuestas_alternativas": [
+            "Suma los valores de un rango y los divide entre la cantidad de datos",
+            "Saca la media de varios números en las celdas seleccionadas",
+            "Obtiene el valor promedio de un grupo de celdas"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Bien explicado: PROMEDIO calcula la media aritmética de los valores seleccionados.",
+          "retroalimentacion_incorrecta": "Tu respuesta no menciona que PROMEDIO calcula la media aritmética (suma dividida entre la cantidad de valores); revisa ese concepto."
+        },
+        {
+          "id": "excel-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve usar el símbolo '$' en una referencia de celda como $A$1?",
+          "respuesta_correcta": "Para fijar la referencia (referencia absoluta) y que no cambie al copiar la fórmula a otras celdas.",
+          "respuestas_alternativas": [
+            "Bloquea la celda para que la fórmula no cambie al arrastrarla",
+            "Hace que la referencia sea absoluta y no relativa",
+            "Sirve para que al copiar la fórmula la celda referenciada siga siendo la misma"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Exacto, el '$' crea una referencia absoluta que no cambia al copiar la fórmula.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que el '$' fija la celda (referencia absoluta) para que no varíe al copiar la fórmula a otras celdas."
+        },
+        {
+          "id": "excel-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es una hoja de cálculo?",
+          "respuesta_correcta": "Es un documento organizado en filas y columnas que forman celdas, usado para ingresar, calcular y analizar datos.",
+          "respuestas_alternativas": [
+            "Un documento dividido en celdas, filas y columnas para trabajar con datos y números",
+            "Es la cuadrícula de celdas donde se organizan y calculan datos",
+            "Un archivo formado por filas y columnas donde se guardan y procesan datos"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, una hoja de cálculo organiza datos en celdas formadas por filas y columnas.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que es un documento organizado en filas y columnas (celdas) para trabajar con datos."
+        },
+        {
+          "id": "excel-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve ordenar y filtrar datos en una hoja de Excel?",
+          "respuesta_correcta": "Ordenar organiza los datos según un criterio (por ejemplo alfabético o numérico), y filtrar permite mostrar solo las filas que cumplen ciertas condiciones, facilitando el análisis de la información.",
+          "respuestas_alternativas": [
+            "Ordenar acomoda los datos de mayor a menor o A-Z, y filtrar muestra solo lo que cumple una condición",
+            "Sirve para organizar la información y ver solamente los datos que interesan"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, ordenar reorganiza los datos y filtrar muestra solo las filas que cumplen un criterio.",
+          "retroalimentacion_incorrecta": "Te faltó explicar la diferencia: ordenar reorganiza los datos según un criterio, filtrar oculta las filas que no cumplen una condición."
+        },
+        {
+          "id": "excel-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál es la extensión de archivo más común para guardar un libro de Excel moderno?",
+          "opciones": [".xlsx", ".docx", ".pptx", ".pdf"],
+          "respuesta_correcta": ".xlsx",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, .xlsx es la extensión moderna de los libros de Excel.",
+          "retroalimentacion_incorrecta": ".docx es de Word, .pptx de PowerPoint y .pdf es un formato de documento; Excel moderno usa .xlsx."
+        },
+        {
+          "id": "excel-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué hace la función CONTAR.SI (COUNTIF), por ejemplo =CONTAR.SI(A1:A10;\">5\")?",
+          "opciones": [
+            "Cuenta cuántas celdas del rango cumplen una condición",
+            "Suma los valores que son mayores a 5",
+            "Ordena el rango de mayor a menor",
+            "Calcula el promedio del rango"
+          ],
+          "respuesta_correcta": "Cuenta cuántas celdas del rango cumplen una condición",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, CONTAR.SI cuenta las celdas de un rango que cumplen la condición indicada.",
+          "retroalimentacion_incorrecta": "CONTAR.SI no suma ni ordena: cuenta cuántas celdas del rango cumplen la condición dada."
+        },
+        {
+          "id": "excel-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Para qué sirve una tabla dinámica (tabla pivote) en Excel?",
+          "opciones": [
+            "Para resumir, agrupar y analizar grandes cantidades de datos de forma interactiva",
+            "Para dar color automático a las celdas",
+            "Para corregir errores ortográficos en los datos",
+            "Para proteger la hoja con contraseña"
+          ],
+          "respuesta_correcta": "Para resumir, agrupar y analizar grandes cantidades de datos de forma interactiva",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, las tablas dinámicas permiten resumir y analizar grandes volúmenes de datos de forma interactiva.",
+          "retroalimentacion_incorrecta": "Una tabla dinámica no da formato de color ni corrige ortografía: sirve para resumir y analizar datos de forma interactiva."
+        },
+        {
+          "id": "excel-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es una fórmula en Excel?",
+          "respuesta_correcta": "Es una expresión que empieza con el signo '=' y realiza cálculos u operaciones automáticamente usando valores o referencias de celdas.",
+          "respuestas_alternativas": [
+            "Es una operación que empieza con '=' y calcula algo usando datos de las celdas",
+            "Una instrucción que hace cálculos automáticos a partir de valores o celdas",
+            "Es un cálculo que Excel hace automáticamente usando números o celdas como datos"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, una fórmula empieza con '=' y realiza cálculos automáticos con valores o celdas.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que una fórmula empieza con '=' y realiza cálculos automáticos usando valores o referencias de celdas."
+        },
+        {
+          "id": "excel-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué diferencia hay entre una referencia relativa (A1) y una absoluta ($A$1) al copiar una fórmula?",
+          "respuesta_correcta": "La referencia relativa cambia automáticamente según la nueva posición al copiar la fórmula, mientras que la absoluta permanece fija sin importar dónde se copie.",
+          "respuestas_alternativas": [
+            "La relativa se ajusta al copiar y la absoluta se queda fija siempre",
+            "Una cambia de celda al copiarla (relativa) y la otra no cambia nunca (absoluta)"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, la relativa se ajusta automáticamente al copiar y la absoluta permanece fija.",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: la referencia relativa cambia al copiar la fórmula, la absoluta ($) se mantiene fija."
+        },
+        {
+          "id": "excel-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve el formato condicional en Excel?",
+          "respuesta_correcta": "Permite cambiar automáticamente el formato visual (como el color) de las celdas según se cumpla una condición, facilitando identificar datos importantes de un vistazo.",
+          "respuestas_alternativas": [
+            "Resalta automáticamente celdas que cumplen cierta condición, cambiando su color u otro estilo",
+            "Cambia el aspecto de una celda si su valor cumple una regla que definas"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, el formato condicional resalta visualmente celdas que cumplen una condición definida.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que el formato condicional cambia el estilo visual de una celda automáticamente cuando cumple una condición."
+        }
+      ]
+    },
+    {
+      "categoria": "word",
+      "nombre_tema": "Microsoft Word",
+      "competencia": "Edición y formato de documentos de texto",
+      "conceptos_clave": ["formato de texto", "estilos", "tablas", "revisión ortográfica", "control de cambios", "combinar correspondencia"],
+      "ejercicios": [
+        {
+          "id": "word-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Para qué sirve principalmente Microsoft Word?",
+          "opciones": [
+            "Para crear y editar documentos de texto",
+            "Para realizar cálculos y hojas de cálculo",
+            "Para crear presentaciones con diapositivas",
+            "Para gestionar bases de datos"
+          ],
+          "respuesta_correcta": "Para crear y editar documentos de texto",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, Word es un procesador de texto para crear y editar documentos.",
+          "retroalimentacion_incorrecta": "Esas otras opciones corresponden a Excel (cálculos) y PowerPoint (presentaciones); Word es para documentos de texto."
+        },
+        {
+          "id": "word-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué herramienta de Word ayuda a detectar errores de escritura mientras redactas?",
+          "opciones": ["Revisión ortográfica y gramatical", "Combinar correspondencia", "Tabla de contenido", "Marca de agua"],
+          "respuesta_correcta": "Revisión ortográfica y gramatical",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, esa herramienta subraya errores ortográficos y gramaticales mientras escribes.",
+          "retroalimentacion_incorrecta": "Piensa en la herramienta que subraya palabras en rojo/azul cuando hay errores: es la revisión ortográfica y gramatical."
+        },
+        {
+          "id": "word-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué función tiene la herramienta 'Sinónimos' en Word?",
+          "opciones": [
+            "Sugerir palabras con significado similar para enriquecer el texto",
+            "Traducir el documento a otro idioma",
+            "Contar las palabras del documento",
+            "Insertar una tabla de contenido"
+          ],
+          "respuesta_correcta": "Sugerir palabras con significado similar para enriquecer el texto",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, sinónimos sugiere palabras alternativas con significado similar.",
+          "retroalimentacion_incorrecta": "Esas otras opciones son traductor, contador de palabras y tabla de contenido; sinónimos sugiere palabras con significado similar."
+        },
+        {
+          "id": "word-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué ventaja ofrece usar 'Control de cambios' en Word?",
+          "opciones": [
+            "Permite ver y aceptar o rechazar las ediciones hechas por otra persona en el documento",
+            "Cambia automáticamente el idioma del documento",
+            "Protege el documento con contraseña",
+            "Reduce el tamaño del archivo"
+          ],
+          "respuesta_correcta": "Permite ver y aceptar o rechazar las ediciones hechas por otra persona en el documento",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, control de cambios registra las ediciones para poder revisarlas, aceptarlas o rechazarlas.",
+          "retroalimentacion_incorrecta": "Control de cambios no cambia el idioma ni protege con contraseña: sirve para rastrear y revisar ediciones de otra persona."
+        },
+        {
+          "id": "word-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué ventaja tiene usar 'Estilos' (como Título 1, Título 2) en lugar de solo cambiar el tamaño y color del texto manualmente?",
+          "respuesta_correcta": "Permite mantener un formato consistente en todo el documento y generar automáticamente una tabla de contenido.",
+          "respuestas_alternativas": [
+            "Da uniformidad al documento y facilita crear el índice automático",
+            "Ayuda a organizar el documento y poder generar la tabla de contenidos automáticamente",
+            "Hace que el formato sea consistente y permite navegar el documento por secciones"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Muy bien, los estilos dan consistencia y habilitan funciones como la tabla de contenido automática.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que los estilos permiten generar una tabla de contenido automática y mantener consistencia en todo el documento."
+        },
+        {
+          "id": "word-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es 'combinar correspondencia' en Word?",
+          "respuesta_correcta": "Una función que permite generar varios documentos personalizados (por ejemplo cartas) a partir de una plantilla y una fuente de datos como una lista de nombres.",
+          "respuestas_alternativas": [
+            "Sirve para crear cartas personalizadas para muchas personas usando una plantilla y una lista de datos",
+            "Combina una plantilla de documento con una base de datos para generar copias personalizadas",
+            "Genera automáticamente documentos individuales para cada persona de una lista, usando una plantilla común"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, combinar correspondencia genera documentos personalizados a partir de una plantilla y una fuente de datos.",
+          "retroalimentacion_incorrecta": "Tu respuesta no explica que se usa una plantilla junto con una fuente de datos (como una lista) para generar documentos personalizados en serie."
+        },
+        {
+          "id": "word-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es un procesador de texto?",
+          "respuesta_correcta": "Es un programa que permite crear, editar, dar formato e imprimir documentos de texto.",
+          "respuestas_alternativas": [
+            "Un programa para escribir, editar y darle formato a documentos",
+            "Software que sirve para redactar y formatear textos como cartas o informes",
+            "Es una aplicación para crear documentos escritos con formato"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, un procesador de texto sirve para crear, editar y dar formato a documentos.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que es un programa para crear, editar y dar formato a documentos de texto."
+        },
+        {
+          "id": "word-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve insertar una tabla en un documento de Word?",
+          "respuesta_correcta": "Para organizar información en filas y columnas, facilitando la comparación y lectura de datos relacionados.",
+          "respuestas_alternativas": [
+            "Ayuda a ordenar datos en filas y columnas para que sean más fáciles de leer",
+            "Sirve para presentar información de forma organizada y comparar datos"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, las tablas organizan información en filas y columnas para facilitar su lectura y comparación.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que las tablas organizan la información en filas y columnas para facilitar su lectura/comparación."
+        },
+        {
+          "id": "word-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué extensión tiene un documento de Word moderno?",
+          "opciones": [".docx", ".xlsx", ".pptx", ".txt"],
+          "respuesta_correcta": ".docx",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, .docx es la extensión moderna de los documentos de Word.",
+          "retroalimentacion_incorrecta": ".xlsx es de Excel y .pptx de PowerPoint; un documento de Word moderno usa .docx."
+        },
+        {
+          "id": "word-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Para qué sirve la herramienta 'Buscar y reemplazar' en Word?",
+          "opciones": [
+            "Para encontrar una palabra o frase en el documento y cambiarla automáticamente por otra",
+            "Para traducir el documento completo",
+            "Para insertar imágenes automáticamente",
+            "Para contar cuántas páginas tiene el documento"
+          ],
+          "respuesta_correcta": "Para encontrar una palabra o frase en el documento y cambiarla automáticamente por otra",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, buscar y reemplazar localiza texto y lo cambia automáticamente por otro que definas.",
+          "retroalimentacion_incorrecta": "Esa herramienta no traduce ni inserta imágenes: sirve para encontrar texto y reemplazarlo automáticamente."
+        },
+        {
+          "id": "word-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un salto de página en Word?",
+          "opciones": [
+            "Una marca que fuerza a que el contenido siguiente empiece en una nueva página",
+            "Un tipo de fuente decorativa",
+            "Un efecto de animación al pasar la página",
+            "Una forma de proteger el documento"
+          ],
+          "respuesta_correcta": "Una marca que fuerza a que el contenido siguiente empiece en una nueva página",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, un salto de página obliga a que el contenido siguiente comience en una nueva página.",
+          "retroalimentacion_incorrecta": "El salto de página no es una fuente ni una animación: es una marca que envía el contenido siguiente a una nueva página."
+        },
+        {
+          "id": "word-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es una plantilla en Word?",
+          "respuesta_correcta": "Es un documento predefinido con formato y estructura ya establecidos, que sirve como base para crear nuevos documentos rápidamente.",
+          "respuestas_alternativas": [
+            "Un modelo de documento ya diseñado que se usa como base para crear otros",
+            "Un archivo con formato predefinido que ahorra tiempo al crear documentos nuevos",
+            "Es una base o formato ya hecho que puedes reutilizar para nuevos documentos"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, una plantilla es un documento base con formato predefinido para crear nuevos documentos.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que una plantilla es un documento con formato ya definido que sirve de base para crear otros nuevos."
+        },
+        {
+          "id": "word-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve numerar las páginas de un documento?",
+          "respuesta_correcta": "Para facilitar la organización, referencia y navegación del documento, especialmente en documentos largos como informes o tesis.",
+          "respuestas_alternativas": [
+            "Ayuda a ubicar y ordenar el contenido en documentos largos",
+            "Facilita citar o encontrar una sección específica del documento"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, numerar páginas facilita la organización y referencia en documentos largos.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que numerar páginas ayuda a organizar y ubicar contenido, sobre todo en documentos largos."
+        },
+        {
+          "id": "word-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es una nota al pie y para qué se usa?",
+          "respuesta_correcta": "Es una aclaración, referencia o cita que aparece al final de la página, usada para dar información adicional sin interrumpir el texto principal.",
+          "respuestas_alternativas": [
+            "Un comentario o referencia que se pone al final de la página para aclarar algo del texto",
+            "Sirve para agregar citas o explicaciones sin cortar el texto principal"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, la nota al pie da información adicional al final de la página sin interrumpir el texto principal.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que la nota al pie sirve para aclaraciones o referencias al final de la página, sin cortar el texto principal."
+        }
+      ]
+    },
+    {
+      "categoria": "powerpoint",
+      "nombre_tema": "Microsoft PowerPoint",
+      "competencia": "Diseño de presentaciones efectivas",
+      "conceptos_clave": ["diapositivas", "diseño y transiciones", "animaciones", "buenas prácticas de presentación", "notas del orador", "hipervínculos"],
+      "ejercicios": [
+        {
+          "id": "ppt-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué elemento de PowerPoint controla el efecto visual al pasar de una diapositiva a otra?",
+          "opciones": ["Transición", "Animación", "Diseño de diapositiva", "Patrón de diapositivas"],
+          "respuesta_correcta": "Transición",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, las transiciones son los efectos entre una diapositiva y la siguiente.",
+          "retroalimentacion_incorrecta": "Las animaciones afectan a elementos dentro de una diapositiva; el efecto entre diapositivas es la transición."
+        },
+        {
+          "id": "ppt-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "Según buenas prácticas de presentación, ¿qué se recomienda evitar en una diapositiva?",
+          "opciones": [
+            "Saturarla con demasiado texto",
+            "Usar imágenes relevantes",
+            "Usar títulos claros",
+            "Mantener un diseño consistente"
+          ],
+          "respuesta_correcta": "Saturarla con demasiado texto",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, saturar de texto dificulta que la audiencia siga la presentación.",
+          "retroalimentacion_incorrecta": "Piensa en qué dificulta que el público entienda la diapositiva: el exceso de texto."
+        },
+        {
+          "id": "ppt-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué función cumplen las 'notas del orador' en PowerPoint?",
+          "opciones": [
+            "Sirven como guía privada para el presentador, sin que el público las vea en la diapositiva",
+            "Se muestran automáticamente al público durante la presentación",
+            "Cambian el diseño de la diapositiva",
+            "Agregan música de fondo"
+          ],
+          "respuesta_correcta": "Sirven como guía privada para el presentador, sin que el público las vea en la diapositiva",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, las notas del orador son una guía privada visible solo para quien presenta.",
+          "retroalimentacion_incorrecta": "Las notas del orador no las ve el público ni cambian el diseño: son una guía privada para el presentador."
+        },
+        {
+          "id": "ppt-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué ventaja tiene usar hipervínculos dentro de una presentación de PowerPoint?",
+          "opciones": [
+            "Permiten saltar directamente a otra diapositiva, archivo o página web al hacer clic",
+            "Hacen que las diapositivas cambien de color automáticamente",
+            "Reducen el tamaño del archivo de la presentación",
+            "Traducen el contenido a otro idioma"
+          ],
+          "respuesta_correcta": "Permiten saltar directamente a otra diapositiva, archivo o página web al hacer clic",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, los hipervínculos permiten navegar directamente a otra diapositiva, archivo o sitio web.",
+          "retroalimentacion_incorrecta": "Los hipervínculos no cambian colores ni traducen contenido: permiten saltar a otra diapositiva, archivo o página web."
+        },
+        {
+          "id": "ppt-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve el 'patrón de diapositivas' (Slide Master) en PowerPoint?",
+          "respuesta_correcta": "Permite definir un diseño y formato base que se aplica automáticamente a todas las diapositivas de la presentación.",
+          "respuestas_alternativas": [
+            "Define el formato general que van a tener todas las diapositivas",
+            "Sirve para cambiar el diseño de toda la presentación desde un solo lugar",
+            "Controla el estilo y formato que se repite en todas las diapositivas de la presentación"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Bien, el patrón de diapositivas define el formato base para toda la presentación.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que el patrón de diapositivas aplica un diseño/formato base a todas las diapositivas automáticamente."
+        },
+        {
+          "id": "ppt-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué es recomendable usar la regla de las '6x6' (máximo 6 líneas, 6 palabras por línea) al diseñar diapositivas?",
+          "respuesta_correcta": "Porque ayuda a evitar el exceso de texto, haciendo que la diapositiva sea más fácil de leer y que el presentador explique con sus propias palabras.",
+          "respuestas_alternativas": [
+            "Evita saturar la diapositiva de texto y facilita que el público la lea rápido",
+            "Mantiene las diapositivas simples para que el orador hable en vez de leer el texto",
+            "Ayuda a que el presentador no dependa de leer el texto de la diapositiva"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, esa regla busca diapositivas simples y legibles que apoyen al presentador sin saturarlo de texto.",
+          "retroalimentacion_incorrecta": "Repasa la idea central: limitar el texto hace la diapositiva más legible y evita que el presentador solo lea el contenido."
+        },
+        {
+          "id": "ppt-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es una diapositiva en PowerPoint?",
+          "respuesta_correcta": "Es cada una de las páginas individuales que forman una presentación, donde se coloca texto, imágenes u otros elementos.",
+          "respuestas_alternativas": [
+            "Es cada página de la presentación donde se pone el contenido",
+            "Una de las pantallas individuales que componen toda la presentación",
+            "Cada sección o página que se muestra durante la presentación"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, una diapositiva es cada página individual que compone la presentación.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que una diapositiva es cada página individual dentro de la presentación completa."
+        },
+        {
+          "id": "ppt-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué diferencia hay entre una animación y una transición en PowerPoint?",
+          "respuesta_correcta": "La animación es un efecto aplicado a un elemento dentro de una misma diapositiva (como texto o una imagen), mientras que la transición es el efecto al pasar de una diapositiva a otra.",
+          "respuestas_alternativas": [
+            "La animación afecta elementos dentro de la diapositiva y la transición es el cambio entre diapositivas",
+            "Una es para objetos dentro de la diapositiva (animación) y la otra para el paso entre diapositivas (transición)"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, distinguiste bien: animación es dentro de la diapositiva, transición es entre diapositivas.",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: la animación afecta elementos dentro de una diapositiva, la transición es el efecto al cambiar de diapositiva."
+        },
+        {
+          "id": "ppt-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué extensión tiene una presentación moderna de PowerPoint?",
+          "opciones": [".pptx", ".docx", ".xlsx", ".jpg"],
+          "respuesta_correcta": ".pptx",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, .pptx es la extensión moderna de las presentaciones de PowerPoint.",
+          "retroalimentacion_incorrecta": ".docx es de Word y .xlsx de Excel; una presentación moderna de PowerPoint usa .pptx."
+        },
+        {
+          "id": "ppt-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un 'diseño de diapositiva' (layout) en PowerPoint?",
+          "opciones": [
+            "Una disposición predefinida de espacios (para título, texto, imágenes) que organiza el contenido de la diapositiva",
+            "Un efecto de sonido al cambiar de diapositiva",
+            "Un tipo de letra especial",
+            "Una animación aplicada al texto"
+          ],
+          "respuesta_correcta": "Una disposición predefinida de espacios (para título, texto, imágenes) que organiza el contenido de la diapositiva",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el diseño de diapositiva organiza dónde va cada tipo de contenido (título, texto, imágenes).",
+          "retroalimentacion_incorrecta": "Un diseño de diapositiva no es sonido ni animación: es la disposición predefinida de los espacios de contenido."
+        },
+        {
+          "id": "ppt-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Para qué sirve la vista de 'Clasificador de diapositivas' en PowerPoint?",
+          "opciones": [
+            "Para ver todas las diapositivas en miniatura y reordenarlas fácilmente",
+            "Para grabar audio en la presentación",
+            "Para revisar la ortografía del documento",
+            "Para exportar la presentación a PDF"
+          ],
+          "respuesta_correcta": "Para ver todas las diapositivas en miniatura y reordenarlas fácilmente",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, esa vista muestra miniaturas de todas las diapositivas y facilita reordenarlas.",
+          "retroalimentacion_incorrecta": "Esa vista no graba audio ni revisa ortografía: muestra todas las diapositivas en miniatura para reordenarlas fácilmente."
+        },
+        {
+          "id": "ppt-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué elementos básicos suele tener la primera diapositiva (de título) de una presentación?",
+          "respuesta_correcta": "Generalmente incluye el título de la presentación y un subtítulo, como el nombre del autor, la fecha o el curso.",
+          "respuestas_alternativas": [
+            "El título del tema y datos como el nombre del expositor o la fecha",
+            "Un título principal y subtítulo con información como autor o materia"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, la diapositiva de título suele llevar el título principal y un subtítulo con datos como autor o fecha.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que la diapositiva de título lleva el título de la presentación y un subtítulo (autor, fecha, curso, etc.)."
+        },
+        {
+          "id": "ppt-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué es importante mantener un diseño visual consistente en toda la presentación?",
+          "respuesta_correcta": "Porque da una imagen profesional y ordenada, y ayuda a que el público se enfoque en el contenido en lugar de distraerse con cambios de estilo constantes.",
+          "respuestas_alternativas": [
+            "Se ve más profesional y evita distraer al público con estilos diferentes en cada diapositiva",
+            "Ayuda a que la presentación se vea ordenada y el público no se distraiga"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, la consistencia visual da una imagen profesional y evita distraer al público.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que un diseño consistente se ve más profesional y evita distraer al público con cambios de estilo."
+        },
+        {
+          "id": "ppt-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué ventaja tiene usar la función 'Ensayar intervalos' antes de presentar?",
+          "respuesta_correcta": "Permite practicar y medir el tiempo que se tarda en cada diapositiva, ayudando a ajustar el ritmo de la presentación para que encaje en el tiempo disponible.",
+          "respuestas_alternativas": [
+            "Ayuda a calcular cuánto tiempo toma cada diapositiva para practicar el ritmo de la presentación",
+            "Sirve para medir y ajustar los tiempos antes de presentar en público"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, ensayar intervalos ayuda a medir y ajustar el tiempo dedicado a cada diapositiva.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que esa función mide el tiempo por diapositiva para ayudar a practicar y ajustar el ritmo de la presentación."
+        }
+      ]
+    },
+    {
+      "categoria": "internet_redes",
+      "nombre_tema": "Internet y Redes",
+      "competencia": "Comprensión de conceptos básicos de redes e internet",
+      "conceptos_clave": ["red LAN/WAN", "dirección IP", "navegador web", "protocolo HTTP/HTTPS", "Wi-Fi", "correo electrónico"],
+      "ejercicios": [
+        {
+          "id": "internet-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es una dirección IP?",
+          "opciones": [
+            "Un identificador único que permite localizar un dispositivo en una red",
+            "El nombre de un sitio web",
+            "Un tipo de virus informático",
+            "El cable que conecta dos computadoras"
+          ],
+          "respuesta_correcta": "Un identificador único que permite localizar un dispositivo en una red",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, la IP identifica y localiza un dispositivo dentro de una red.",
+          "retroalimentacion_incorrecta": "La IP no es un nombre de sitio web ni un cable: es el identificador numérico de un dispositivo en la red."
+        },
+        {
+          "id": "internet-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un navegador web?",
+          "opciones": [
+            "Un programa que permite acceder e interactuar con páginas de internet",
+            "Un dispositivo físico para conectar cables de red",
+            "Un tipo de virus informático",
+            "Un servicio de correo electrónico"
+          ],
+          "respuesta_correcta": "Un programa que permite acceder e interactuar con páginas de internet",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, el navegador es el programa (como Chrome o Firefox) que permite ver páginas web.",
+          "retroalimentacion_incorrecta": "El navegador no es un dispositivo físico ni un virus: es el programa que permite acceder a páginas de internet."
+        },
+        {
+          "id": "internet-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál es la diferencia principal entre una red LAN y una red WAN?",
+          "opciones": [
+            "La LAN cubre un área local (como una oficina) y la WAN cubre un área geográfica extensa",
+            "La LAN es inalámbrica y la WAN siempre es cableada",
+            "La WAN solo existe dentro de un mismo edificio",
+            "No hay diferencia, son el mismo tipo de red"
+          ],
+          "respuesta_correcta": "La LAN cubre un área local (como una oficina) y la WAN cubre un área geográfica extensa",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, LAN es de alcance local y WAN conecta redes a mayor distancia, como internet.",
+          "retroalimentacion_incorrecta": "La diferencia clave es el alcance geográfico: LAN es local, WAN cubre distancias mucho mayores."
+        },
+        {
+          "id": "internet-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es una red Wi-Fi?",
+          "opciones": [
+            "Una red inalámbrica que permite conectar dispositivos a internet sin usar cables",
+            "Un tipo de virus que se propaga por internet",
+            "Un programa para editar fotos",
+            "Un protocolo exclusivo de correo electrónico"
+          ],
+          "respuesta_correcta": "Una red inalámbrica que permite conectar dispositivos a internet sin usar cables",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, Wi-Fi es una tecnología de red inalámbrica para conectarse a internet sin cables.",
+          "retroalimentacion_incorrecta": "Wi-Fi no es un virus ni un programa de edición: es una red inalámbrica para conectar dispositivos sin cables."
+        },
+        {
+          "id": "internet-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué significa que un sitio web use 'HTTPS' en lugar de 'HTTP'?",
+          "respuesta_correcta": "Que la comunicación entre el navegador y el sitio está cifrada/encriptada, lo que la hace más segura.",
+          "respuestas_alternativas": [
+            "Los datos viajan encriptados, es una versión más segura de HTTP",
+            "Es una conexión segura porque la información se transmite cifrada",
+            "El sitio protege la información transmitida mediante cifrado"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Exacto, la 'S' de HTTPS indica que la conexión está cifrada y es más segura.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que HTTPS cifra la información transmitida, a diferencia de HTTP que no lo hace."
+        },
+        {
+          "id": "internet-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué función cumple un router en una red doméstica?",
+          "respuesta_correcta": "Conecta varios dispositivos entre sí y distribuye la conexión a internet entre ellos.",
+          "respuestas_alternativas": [
+            "Reparte el internet a todos los dispositivos conectados en la red",
+            "Conecta la red local con internet y comunica los dispositivos entre sí",
+            "Permite que varios dispositivos compartan una sola conexión a internet"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, el router interconecta los dispositivos de la red y gestiona el acceso a internet.",
+          "retroalimentacion_incorrecta": "Repasa la función del router: conecta los dispositivos de la red local entre sí y distribuye el acceso a internet."
+        },
+        {
+          "id": "internet-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es internet?",
+          "respuesta_correcta": "Es una red mundial que conecta millones de computadoras y dispositivos, permitiendo compartir información y comunicarse.",
+          "respuestas_alternativas": [
+            "Una red global que conecta computadoras de todo el mundo para compartir información",
+            "Es la red de redes que conecta dispositivos alrededor del mundo",
+            "Un sistema mundial de redes conectadas que permite el intercambio de datos"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, internet es una red mundial que conecta dispositivos para compartir información.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que internet es una red mundial que conecta computadoras/dispositivos para compartir información."
+        },
+        {
+          "id": "internet-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es un correo electrónico y para qué se usa?",
+          "respuesta_correcta": "Es un servicio que permite enviar y recibir mensajes digitales a través de internet, usado para comunicación personal, académica y laboral.",
+          "respuestas_alternativas": [
+            "Un medio para mandar y recibir mensajes por internet, usado para comunicarse",
+            "Sirve para enviar mensajes electrónicos a otras personas a través de la red"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el correo electrónico permite enviar y recibir mensajes digitales por internet.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que es un servicio para enviar/recibir mensajes digitales por internet, usado para comunicarse."
+        },
+        {
+          "id": "internet-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un módem?",
+          "opciones": [
+            "Un dispositivo que convierte la señal de internet del proveedor para que pueda usarse en la red del hogar",
+            "Un programa para editar video",
+            "Un tipo de virus",
+            "Un navegador web"
+          ],
+          "respuesta_correcta": "Un dispositivo que convierte la señal de internet del proveedor para que pueda usarse en la red del hogar",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, el módem convierte la señal del proveedor de internet para poder usarla en la red doméstica.",
+          "retroalimentacion_incorrecta": "El módem no es un programa ni un virus: es el dispositivo que convierte la señal de internet del proveedor para la red del hogar."
+        },
+        {
+          "id": "internet-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un dominio (como google.com o mineduc.gob.gt)?",
+          "opciones": [
+            "Es el nombre único que identifica a un sitio web en internet",
+            "Es la contraseña de acceso a un sitio",
+            "Es un tipo de virus informático",
+            "Es la velocidad de conexión a internet"
+          ],
+          "respuesta_correcta": "Es el nombre único que identifica a un sitio web en internet",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el dominio es el nombre único que identifica a un sitio web en internet.",
+          "retroalimentacion_incorrecta": "El dominio no es una contraseña ni una velocidad: es el nombre único que identifica a un sitio web."
+        },
+        {
+          "id": "internet-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué significa guardar archivos 'en la nube' (cloud)?",
+          "opciones": [
+            "Almacenarlos en servidores remotos accesibles por internet, en lugar de solo en el dispositivo local",
+            "Guardarlos únicamente en el disco duro de la computadora",
+            "Imprimirlos en papel para respaldo",
+            "Guardarlos en un USB exclusivamente"
+          ],
+          "respuesta_correcta": "Almacenarlos en servidores remotos accesibles por internet, en lugar de solo en el dispositivo local",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, la nube almacena archivos en servidores remotos accesibles desde internet.",
+          "retroalimentacion_incorrecta": "La nube no es guardar solo en el disco local ni en USB: es almacenar en servidores remotos accesibles por internet."
+        },
+        {
+          "id": "internet-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es un servidor?",
+          "respuesta_correcta": "Es una computadora o programa que almacena información o servicios y los pone a disposición de otros dispositivos (clientes) a través de una red.",
+          "respuestas_alternativas": [
+            "Una computadora que atiende solicitudes de otros dispositivos y les da acceso a datos o servicios",
+            "Es el equipo que guarda la información de un sitio web o servicio y la entrega cuando se la piden"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, un servidor almacena información/servicios y los entrega a otros dispositivos a través de la red.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que un servidor almacena datos o servicios y los entrega a otros dispositivos (clientes) mediante una red."
+        },
+        {
+          "id": "internet-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Cuál es la diferencia entre subir (upload) y descargar (download) un archivo?",
+          "respuesta_correcta": "Subir es enviar un archivo desde tu dispositivo hacia internet o un servidor, y descargar es traer un archivo desde internet hacia tu dispositivo.",
+          "respuestas_alternativas": [
+            "Subir manda un archivo tuyo hacia internet, descargar trae un archivo de internet hacia tu equipo",
+            "Uno envía datos hacia la red (subir) y el otro los trae desde la red (descargar)"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, subir envía datos hacia internet y descargar los trae desde internet a tu dispositivo.",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: subir es enviar un archivo hacia internet, descargar es traerlo desde internet a tu dispositivo."
+        },
+        {
+          "id": "internet-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué riesgo implica conectarse a una red Wi-Fi pública sin protección?",
+          "respuesta_correcta": "Que otras personas conectadas a la misma red podrían interceptar la información que envías, como contraseñas o datos personales, ya que la conexión no está cifrada de forma segura.",
+          "respuestas_alternativas": [
+            "Alguien más en la misma red podría interceptar tus datos o contraseñas",
+            "Es más fácil que roben información porque la red pública no es segura"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, en una red pública sin protección otros usuarios podrían interceptar tu información.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que en una red pública sin protección, otros usuarios conectados podrían interceptar tus datos o contraseñas."
+        }
+      ]
+    },
+    {
+      "categoria": "sistema_operativo",
+      "nombre_tema": "Sistema Operativo",
+      "competencia": "Comprensión del funcionamiento y gestión de un sistema operativo",
+      "conceptos_clave": ["funciones del SO", "administración de archivos", "procesos", "tipos de sistemas operativos", "escritorio", "actualizaciones"],
+      "ejercicios": [
+        {
+          "id": "so-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál es la función principal de un sistema operativo?",
+          "opciones": [
+            "Administrar el hardware y los recursos de la computadora para que los programas puedan funcionar",
+            "Diseñar páginas web",
+            "Crear documentos de texto",
+            "Enviar correos electrónicos"
+          ],
+          "respuesta_correcta": "Administrar el hardware y los recursos de la computadora para que los programas puedan funcionar",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, el SO gestiona el hardware y los recursos para que las aplicaciones puedan ejecutarse.",
+          "retroalimentacion_incorrecta": "Esas otras opciones son tareas de aplicaciones específicas; el SO administra el hardware y los recursos del sistema."
+        },
+        {
+          "id": "so-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál de las siguientes es un ejemplo de sistema operativo?",
+          "opciones": ["Windows", "Microsoft Word", "Google Chrome", "Adobe Photoshop"],
+          "respuesta_correcta": "Windows",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, Windows es un sistema operativo; las otras opciones son aplicaciones.",
+          "retroalimentacion_incorrecta": "Word, Chrome y Photoshop son aplicaciones que corren sobre un sistema operativo, no son sistemas operativos."
+        },
+        {
+          "id": "so-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué función cumple el 'escritorio' en un sistema operativo?",
+          "opciones": [
+            "Es la pantalla principal donde se accede a íconos, archivos y programas",
+            "Es el componente que enfría la computadora",
+            "Es un tipo de memoria interna",
+            "Es el cable que conecta el monitor"
+          ],
+          "respuesta_correcta": "Es la pantalla principal donde se accede a íconos, archivos y programas",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el escritorio es la pantalla principal de acceso a íconos, archivos y programas.",
+          "retroalimentacion_incorrecta": "El escritorio no es hardware: es la pantalla principal del sistema operativo donde se accede a íconos y programas."
+        },
+        {
+          "id": "so-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es una actualización del sistema operativo y por qué es importante instalarla?",
+          "opciones": [
+            "Una mejora que corrige errores y vulnerabilidades de seguridad, además de agregar nuevas funciones",
+            "Un virus que se instala automáticamente",
+            "Un programa que borra archivos antiguos",
+            "Un cambio que solo modifica el fondo de pantalla"
+          ],
+          "respuesta_correcta": "Una mejora que corrige errores y vulnerabilidades de seguridad, además de agregar nuevas funciones",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, las actualizaciones corrigen errores, mejoran la seguridad y agregan funciones nuevas.",
+          "retroalimentacion_incorrecta": "Una actualización no es un virus ni solo cambia el fondo de pantalla: corrige errores, mejora la seguridad y agrega funciones."
+        },
+        {
+          "id": "so-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es un 'proceso' en el contexto de un sistema operativo?",
+          "respuesta_correcta": "Es un programa en ejecución, con sus propios recursos de memoria y tiempo de procesador asignados por el sistema operativo.",
+          "respuestas_alternativas": [
+            "Un programa que se está ejecutando en ese momento en la computadora",
+            "Una instancia de un programa corriendo, gestionada por el sistema operativo",
+            "Es la ejecución activa de un programa, distinta de tenerlo solo instalado"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Bien, un proceso es un programa en ejecución al cual el SO le asigna recursos.",
+          "retroalimentacion_incorrecta": "Te faltó precisar que un proceso es un programa en ejecución (no solo instalado), gestionado por el sistema operativo."
+        },
+        {
+          "id": "so-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué diferencia hay entre el sistema de archivos y el administrador de tareas de un sistema operativo?",
+          "respuesta_correcta": "El sistema de archivos organiza y almacena los archivos y carpetas, mientras que el administrador de tareas muestra y controla los procesos y programas en ejecución.",
+          "respuestas_alternativas": [
+            "El sistema de archivos guarda los datos y el administrador de tareas controla los programas abiertos",
+            "Uno organiza archivos guardados y el otro maneja los procesos que están corriendo",
+            "El sistema de archivos guarda datos permanentemente, el administrador de tareas muestra lo que se ejecuta en el momento"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, distinguiste bien entre almacenamiento de archivos y gestión de procesos en ejecución.",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: uno organiza archivos almacenados y el otro controla procesos/programas que se están ejecutando."
+        },
+        {
+          "id": "so-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve el sistema de archivos de un sistema operativo?",
+          "respuesta_correcta": "Sirve para organizar, almacenar y administrar los archivos y carpetas en el dispositivo de almacenamiento.",
+          "respuestas_alternativas": [
+            "Organiza y guarda los archivos y carpetas dentro de la computadora",
+            "Permite guardar, buscar y organizar los archivos en el disco",
+            "Administra dónde y cómo se almacenan los archivos y carpetas"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, el sistema de archivos organiza y administra los archivos y carpetas almacenados.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que el sistema de archivos organiza y administra los archivos/carpetas guardados en el dispositivo."
+        },
+        {
+          "id": "so-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué diferencia hay entre un sistema operativo de escritorio (como Windows) y uno móvil (como Android)?",
+          "respuesta_correcta": "El de escritorio está diseñado para computadoras con teclado, mouse y mayor capacidad de procesamiento, mientras que el móvil está optimizado para pantallas táctiles y dispositivos con menos recursos, como celulares.",
+          "respuestas_alternativas": [
+            "El de escritorio es para computadoras y el móvil para celulares/tablets con pantalla táctil",
+            "Uno está pensado para computadoras (teclado y mouse) y el otro para dispositivos táctiles con menos recursos"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, distinguiste bien entre el diseño para computadoras y el diseño para dispositivos móviles táctiles.",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: el de escritorio está pensado para computadoras (teclado/mouse), el móvil para pantallas táctiles con menos recursos."
+        },
+        {
+          "id": "so-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es una carpeta (o directorio) en un sistema operativo?",
+          "opciones": [
+            "Un contenedor que organiza y agrupa archivos y otras carpetas",
+            "Un tipo de virus",
+            "Un componente físico de la computadora",
+            "Un programa para editar imágenes"
+          ],
+          "respuesta_correcta": "Un contenedor que organiza y agrupa archivos y otras carpetas",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, una carpeta organiza y agrupa archivos y otras carpetas.",
+          "retroalimentacion_incorrecta": "Una carpeta no es hardware ni un virus: es un contenedor que organiza archivos y otras carpetas."
+        },
+        {
+          "id": "so-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué función cumple la papelera de reciclaje en un sistema operativo?",
+          "opciones": [
+            "Almacena temporalmente los archivos eliminados, permitiendo recuperarlos antes de borrarlos definitivamente",
+            "Borra archivos de forma permanente e inmediata",
+            "Comprime archivos para ahorrar espacio",
+            "Escanea la computadora en busca de virus"
+          ],
+          "respuesta_correcta": "Almacena temporalmente los archivos eliminados, permitiendo recuperarlos antes de borrarlos definitivamente",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, la papelera guarda temporalmente los archivos eliminados y permite recuperarlos.",
+          "retroalimentacion_incorrecta": "La papelera no borra de forma permanente ni escanea virus: guarda temporalmente los archivos eliminados para poder recuperarlos."
+        },
+        {
+          "id": "so-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Para qué sirve el 'modo seguro' (safe mode) de un sistema operativo?",
+          "opciones": [
+            "Para iniciar el sistema con solo los programas y controladores esenciales, útil para diagnosticar y resolver problemas",
+            "Para navegar en internet de forma anónima",
+            "Para acelerar el arranque en el uso diario normal",
+            "Para instalar juegos con mejor rendimiento"
+          ],
+          "respuesta_correcta": "Para iniciar el sistema con solo los programas y controladores esenciales, útil para diagnosticar y resolver problemas",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, el modo seguro inicia con lo esencial para ayudar a diagnosticar y resolver problemas del sistema.",
+          "retroalimentacion_incorrecta": "El modo seguro no es para navegación anónima ni para uso diario: sirve para diagnosticar problemas iniciando solo con lo esencial."
+        },
+        {
+          "id": "so-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es un archivo?",
+          "respuesta_correcta": "Es una unidad de información almacenada con un nombre y formato específico (como un documento, imagen o programa) que el sistema operativo gestiona.",
+          "respuestas_alternativas": [
+            "Es un conjunto de datos guardado con un nombre, como un documento, foto o programa",
+            "Una unidad de datos almacenada en la computadora, identificada por nombre y extensión"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, un archivo es una unidad de información almacenada con nombre y formato específico.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que un archivo es una unidad de información almacenada, identificada por nombre y formato (extensión)."
+        },
+        {
+          "id": "so-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Para qué sirve formatear un dispositivo de almacenamiento (como un USB)?",
+          "respuesta_correcta": "Para preparar el dispositivo con un sistema de archivos, borrando todos los datos existentes y dejándolo listo para almacenar nueva información.",
+          "respuestas_alternativas": [
+            "Borra todo el contenido y deja el dispositivo listo para usarse desde cero",
+            "Prepara y limpia el almacenamiento para poder guardar datos nuevos"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, formatear borra los datos existentes y prepara el dispositivo para almacenar información nueva.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que formatear borra todos los datos y deja el dispositivo preparado con un sistema de archivos nuevo."
+        },
+        {
+          "id": "so-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es la multitarea en un sistema operativo?",
+          "respuesta_correcta": "Es la capacidad del sistema operativo de ejecutar varios programas o procesos al mismo tiempo, repartiendo los recursos del procesador entre ellos.",
+          "respuestas_alternativas": [
+            "Es poder tener varios programas abiertos y funcionando a la vez",
+            "La capacidad de correr múltiples procesos al mismo tiempo en la computadora"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, la multitarea permite ejecutar varios programas o procesos al mismo tiempo.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que la multitarea es la capacidad de ejecutar varios programas/procesos a la vez, repartiendo los recursos."
+        }
+      ]
+    },
+    {
+      "categoria": "hardware_software",
+      "nombre_tema": "Hardware y Software",
+      "competencia": "Distinción y comprensión de los componentes físicos y lógicos de una computadora",
+      "conceptos_clave": ["hardware vs software", "componentes internos (CPU, RAM, disco)", "periféricos", "software de sistema vs aplicación", "unidades de almacenamiento"],
+      "ejercicios": [
+        {
+          "id": "hw-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál de las siguientes opciones es un ejemplo de hardware?",
+          "opciones": ["Memoria RAM", "Sistema operativo", "Navegador web", "Hoja de cálculo"],
+          "respuesta_correcta": "Memoria RAM",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, la RAM es un componente físico (hardware) de la computadora.",
+          "retroalimentacion_incorrecta": "El sistema operativo, el navegador y la hoja de cálculo son software; hardware son los componentes físicos como la RAM."
+        },
+        {
+          "id": "hw-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué componente se considera el 'cerebro' de la computadora, encargado de procesar las instrucciones?",
+          "opciones": ["CPU (procesador)", "Monitor", "Teclado", "Disco duro"],
+          "respuesta_correcta": "CPU (procesador)",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, la CPU procesa las instrucciones y es el componente central de procesamiento.",
+          "retroalimentacion_incorrecta": "El monitor, teclado y disco duro son periféricos o almacenamiento; el procesamiento lo hace la CPU."
+        },
+        {
+          "id": "hw-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué unidad se usa comúnmente para medir la capacidad de almacenamiento de un disco duro?",
+          "opciones": ["Gigabytes (GB) o Terabytes (TB)", "Megahertz (MHz)", "Vatios (W)", "Pulgadas (in)"],
+          "respuesta_correcta": "Gigabytes (GB) o Terabytes (TB)",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, la capacidad de almacenamiento se mide en gigabytes o terabytes.",
+          "retroalimentacion_incorrecta": "MHz mide velocidad del procesador, vatios mide energía y pulgadas mide tamaño de pantalla; el almacenamiento se mide en GB/TB."
+        },
+        {
+          "id": "hw-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué función cumple la memoria RAM en una computadora?",
+          "opciones": [
+            "Almacena temporalmente los datos que el procesador usa mientras el programa está en ejecución",
+            "Guarda los archivos de forma permanente aunque se apague la computadora",
+            "Enfría los componentes internos",
+            "Conecta la computadora a internet"
+          ],
+          "respuesta_correcta": "Almacena temporalmente los datos que el procesador usa mientras el programa está en ejecución",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, la RAM almacena temporalmente los datos en uso mientras los programas se ejecutan.",
+          "retroalimentacion_incorrecta": "La RAM no guarda datos permanentemente ni conecta a internet: almacena temporalmente los datos en uso durante la ejecución."
+        },
+        {
+          "id": "hw-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "Explica la diferencia entre hardware y software.",
+          "respuesta_correcta": "El hardware son los componentes físicos y tangibles de la computadora, mientras que el software son los programas e instrucciones que la hacen funcionar.",
+          "respuestas_alternativas": [
+            "Hardware es lo físico que se puede tocar, software son los programas",
+            "El hardware son las partes físicas y el software es la parte lógica/programas",
+            "Uno se puede tocar (hardware) y el otro es código/instrucciones (software)"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, esa es exactamente la diferencia entre hardware (físico) y software (lógico/programas).",
+          "retroalimentacion_incorrecta": "Te faltó distinguir claramente: hardware es lo físico/tangible, software son los programas e instrucciones."
+        },
+        {
+          "id": "hw-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué diferencia hay entre el software de sistema (como el sistema operativo) y el software de aplicación (como Word)?",
+          "respuesta_correcta": "El software de sistema gestiona el hardware y permite que la computadora funcione en general, mientras que el software de aplicación son programas diseñados para tareas específicas del usuario.",
+          "respuestas_alternativas": [
+            "El de sistema controla la computadora en general y el de aplicación sirve para tareas específicas del usuario",
+            "Uno gestiona el hardware (sistema) y el otro cumple funciones específicas para el usuario (aplicación)",
+            "El software de sistema hace funcionar la computadora en general, el de aplicación resuelve una tarea puntual del usuario"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, distinguiste bien entre software de sistema (gestión general) y de aplicación (tareas específicas).",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: el software de sistema administra la computadora en general, el de aplicación resuelve tareas específicas del usuario."
+        },
+        {
+          "id": "hw-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "Menciona un ejemplo de periférico de entrada y uno de salida.",
+          "respuesta_correcta": "Un periférico de entrada es el teclado o el mouse (permite ingresar datos), y uno de salida es el monitor o la impresora (muestra o produce información).",
+          "respuestas_alternativas": [
+            "Entrada: teclado o mouse. Salida: monitor o impresora",
+            "De entrada puede ser el mouse y de salida el monitor",
+            "Teclado como entrada y bocinas/monitor como salida"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, identificaste bien un periférico de entrada y uno de salida.",
+          "retroalimentacion_incorrecta": "Te faltó dar un ejemplo claro de periférico de entrada (como teclado o mouse) y uno de salida (como monitor o impresora)."
+        },
+        {
+          "id": "hw-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué es importante la velocidad del procesador (CPU) en el rendimiento de una computadora?",
+          "respuesta_correcta": "Porque determina qué tan rápido la computadora puede procesar instrucciones y ejecutar tareas, afectando directamente su rendimiento general.",
+          "respuestas_alternativas": [
+            "Entre más rápido el procesador, más rápido se ejecutan los programas y tareas",
+            "La velocidad del procesador afecta qué tan ágil es la computadora para hacer tareas"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, la velocidad del procesador determina qué tan rápido se ejecutan las instrucciones y tareas.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que la velocidad del procesador determina qué tan rápido se procesan las instrucciones, afectando el rendimiento general."
+        },
+        {
+          "id": "hw-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál de las siguientes es una unidad de almacenamiento externo?",
+          "opciones": ["Memoria USB", "Monitor", "Teclado", "Tarjeta de video"],
+          "respuesta_correcta": "Memoria USB",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, la memoria USB es un dispositivo de almacenamiento externo y portátil.",
+          "retroalimentacion_incorrecta": "El monitor, teclado y tarjeta de video no almacenan datos: la memoria USB es el ejemplo de almacenamiento externo."
+        },
+        {
+          "id": "hw-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué diferencia principal hay entre un disco duro (HDD) y una unidad de estado sólido (SSD)?",
+          "opciones": [
+            "El SSD no tiene partes mecánicas y es más rápido; el HDD usa discos giratorios y es más lento",
+            "El HDD siempre tiene más capacidad que cualquier SSD",
+            "El SSD solo sirve para almacenar fotos",
+            "No hay ninguna diferencia real entre ambos"
+          ],
+          "respuesta_correcta": "El SSD no tiene partes mecánicas y es más rápido; el HDD usa discos giratorios y es más lento",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el SSD es más rápido al no tener partes mecánicas, a diferencia del HDD que usa discos giratorios.",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: el SSD no tiene partes móviles y es más rápido, el HDD usa discos giratorios y es más lento."
+        },
+        {
+          "id": "hw-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es la placa madre (motherboard) de una computadora?",
+          "opciones": [
+            "El circuito principal que conecta e interconecta todos los componentes de hardware",
+            "Un programa que administra el hardware",
+            "El componente que enfría el procesador",
+            "Un tipo de memoria RAM"
+          ],
+          "respuesta_correcta": "El circuito principal que conecta e interconecta todos los componentes de hardware",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, la placa madre es el circuito principal que interconecta todos los componentes de hardware.",
+          "retroalimentacion_incorrecta": "La placa madre no es software ni un tipo de RAM: es el circuito principal que conecta todos los componentes físicos."
+        },
+        {
+          "id": "hw-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es un periférico?",
+          "respuesta_correcta": "Es un dispositivo externo que se conecta a la computadora para ingresar o mostrar información, como el teclado, mouse, monitor o impresora.",
+          "respuestas_alternativas": [
+            "Un dispositivo que se conecta a la computadora, como el mouse, teclado o impresora",
+            "Es un aparato externo conectado a la computadora que sirve para entrada o salida de datos"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, un periférico es un dispositivo externo conectado a la computadora para entrada o salida de datos.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que un periférico es un dispositivo externo conectado a la computadora, de entrada o de salida."
+        },
+        {
+          "id": "hw-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué es importante mantener actualizados los drivers (controladores) de los dispositivos?",
+          "respuesta_correcta": "Porque permiten que el sistema operativo se comunique correctamente con el hardware, y mantenerlos actualizados mejora el rendimiento, corrige errores y evita problemas de compatibilidad.",
+          "respuestas_alternativas": [
+            "Ayudan a que el hardware funcione bien con el sistema operativo y evitan fallas",
+            "Actualizarlos mejora el funcionamiento del hardware y previene errores de compatibilidad"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, los drivers actualizados mejoran el rendimiento y evitan errores de compatibilidad con el hardware.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que los drivers permiten la comunicación con el hardware, y actualizarlos mejora el rendimiento y evita fallas."
+        },
+        {
+          "id": "hw-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué ventaja tiene un SSD sobre un disco duro tradicional (HDD)?",
+          "respuesta_correcta": "El SSD es considerablemente más rápido para leer y escribir datos, ya que no tiene partes mecánicas móviles como el HDD, lo que también lo hace más resistente a golpes.",
+          "respuestas_alternativas": [
+            "Es más rápido y más resistente porque no tiene piezas mecánicas que se puedan dañar",
+            "Lee y escribe datos más rápido, y al no tener partes móviles es más duradero"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, el SSD es más rápido y más resistente al no tener partes mecánicas móviles.",
+          "retroalimentacion_incorrecta": "Te faltó mencionar que el SSD es más rápido y más resistente a golpes por no tener partes mecánicas móviles como el HDD."
+        }
+      ]
+    },
+    {
+      "categoria": "seguridad_informatica",
+      "nombre_tema": "Seguridad Informática",
+      "competencia": "Reconocimiento de riesgos y buenas prácticas de seguridad digital",
+      "conceptos_clave": ["contraseñas seguras", "malware/virus", "phishing", "copias de seguridad", "autenticación de dos factores"],
+      "ejercicios": [
+        {
+          "id": "seg-1",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál de las siguientes es considerada una contraseña segura?",
+          "opciones": [
+            "T7#mvR9!qL2",
+            "123456",
+            "nombre completo del usuario",
+            "password"
+          ],
+          "respuesta_correcta": "T7#mvR9!qL2",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, una contraseña segura combina mayúsculas, minúsculas, números y símbolos sin seguir un patrón obvio.",
+          "retroalimentacion_incorrecta": "Las otras opciones son predecibles o muy comunes; una contraseña segura combina letras, números y símbolos de forma no obvia."
+        },
+        {
+          "id": "seg-5",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué se recomienda hacer si recibes un correo sospechoso pidiendo tu contraseña?",
+          "opciones": [
+            "No responder ni hacer clic en enlaces, y reportarlo o eliminarlo",
+            "Responder con tu contraseña inmediatamente",
+            "Reenviarlo a todos tus contactos",
+            "Hacer clic en el enlace para verificar si es real"
+          ],
+          "respuesta_correcta": "No responder ni hacer clic en enlaces, y reportarlo o eliminarlo",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, ante un correo sospechoso no debes responder ni hacer clic; repórtalo o elimínalo.",
+          "retroalimentacion_incorrecta": "Nunca debes responder con tu contraseña ni hacer clic en enlaces sospechosos: repórtalo o elimínalo."
+        },
+        {
+          "id": "seg-2",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es el 'phishing'?",
+          "opciones": [
+            "Un intento de engañar a alguien para que revele información confidencial, simulando ser una fuente confiable",
+            "Un tipo de antivirus",
+            "Un método para hacer copias de seguridad",
+            "Un protocolo de red seguro"
+          ],
+          "respuesta_correcta": "Un intento de engañar a alguien para que revele información confidencial, simulando ser una fuente confiable",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el phishing busca engañar a la víctima para robar información haciéndose pasar por algo confiable.",
+          "retroalimentacion_incorrecta": "El phishing no es un antivirus ni un protocolo: es un engaño para robar información haciéndose pasar por una fuente confiable."
+        },
+        {
+          "id": "seg-6",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es la autenticación de dos factores (2FA) y por qué mejora la seguridad?",
+          "opciones": [
+            "Es un segundo paso de verificación (como un código al celular) además de la contraseña, que dificulta el acceso no autorizado",
+            "Es tener dos contraseñas diferentes para la misma cuenta",
+            "Es un tipo de antivirus",
+            "Es un método para recuperar archivos borrados"
+          ],
+          "respuesta_correcta": "Es un segundo paso de verificación (como un código al celular) además de la contraseña, que dificulta el acceso no autorizado",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, 2FA agrega un segundo paso de verificación que dificulta el acceso no autorizado aunque roben la contraseña.",
+          "retroalimentacion_incorrecta": "2FA no es tener dos contraseñas ni un antivirus: es un segundo paso de verificación que dificulta el acceso no autorizado."
+        },
+        {
+          "id": "seg-3",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué es importante hacer copias de seguridad (backups) de la información?",
+          "respuesta_correcta": "Para poder recuperar la información en caso de que se pierda por fallas del equipo, virus o borrado accidental.",
+          "respuestas_alternativas": [
+            "Permite recuperar los datos si se dañan, se pierden o son borrados por error o por un virus",
+            "Sirve como respaldo para no perder la información ante fallas o ataques",
+            "Es una copia de los archivos que permite restaurarlos si se pierden o dañan"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, los backups permiten recuperar información ante pérdidas por fallas, virus o errores humanos.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que el backup permite recuperar la información ante pérdida, daño o borrado accidental."
+        },
+        {
+          "id": "seg-4",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué diferencia hay entre un virus informático y un antivirus?",
+          "respuesta_correcta": "El virus es un software malicioso que daña o compromete el sistema, mientras que el antivirus es un software diseñado para detectar, bloquear y eliminar ese tipo de amenazas.",
+          "respuestas_alternativas": [
+            "El virus ataca o daña la computadora y el antivirus lo detecta y elimina",
+            "Uno es malicioso (virus) y el otro protege detectando y eliminando amenazas (antivirus)",
+            "El virus infecta y daña, el antivirus previene y elimina esas infecciones"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, distinguiste bien entre el software malicioso (virus) y la herramienta de protección (antivirus).",
+          "retroalimentacion_incorrecta": "Repasa la diferencia: el virus es la amenaza/software malicioso, el antivirus es la herramienta que la detecta y elimina."
+        },
+        {
+          "id": "seg-7",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es el malware?",
+          "respuesta_correcta": "Es cualquier tipo de software malicioso diseñado para dañar, robar información o afectar el funcionamiento de un dispositivo.",
+          "respuestas_alternativas": [
+            "Es un programa dañino que afecta o daña la computadora",
+            "Software malicioso que puede robar datos o dañar el sistema",
+            "Cualquier programa creado para hacer daño a un dispositivo o robar información"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, malware es cualquier software malicioso que daña o roba información de un dispositivo.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que malware es un término general para software malicioso que daña o roba información."
+        },
+        {
+          "id": "seg-8",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué no se recomienda usar la misma contraseña en varias cuentas diferentes?",
+          "respuesta_correcta": "Porque si alguien descubre esa contraseña en una cuenta, podría acceder a todas las demás cuentas que la usan, aumentando el riesgo de seguridad.",
+          "respuestas_alternativas": [
+            "Si roban esa contraseña, el atacante podría entrar a todas tus otras cuentas",
+            "Usar la misma contraseña en todos lados hace que un solo robo comprometa varias cuentas"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, reutilizar contraseñas significa que un solo robo compromete todas las cuentas que la usan.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que si descubren esa contraseña en una cuenta, el atacante podría acceder a todas las demás que la comparten."
+        },
+        {
+          "id": "seg-9",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un antivirus?",
+          "opciones": [
+            "Un programa diseñado para detectar, bloquear y eliminar software malicioso",
+            "Un tipo de virus más fuerte que los demás",
+            "Un servicio para hacer copias de seguridad",
+            "Un protocolo de conexión a internet"
+          ],
+          "respuesta_correcta": "Un programa diseñado para detectar, bloquear y eliminar software malicioso",
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, el antivirus detecta, bloquea y elimina software malicioso.",
+          "retroalimentacion_incorrecta": "El antivirus no es un tipo de virus ni un protocolo: es el programa que detecta, bloquea y elimina malware."
+        },
+        {
+          "id": "seg-10",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es un firewall (cortafuegos)?",
+          "opciones": [
+            "Un sistema que filtra y controla el tráfico de red, permitiendo o bloqueando conexiones según reglas de seguridad",
+            "Un programa para editar documentos",
+            "Un tipo de contraseña muy segura",
+            "Un dispositivo que enfría la computadora"
+          ],
+          "respuesta_correcta": "Un sistema que filtra y controla el tráfico de red, permitiendo o bloqueando conexiones según reglas de seguridad",
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, el firewall filtra el tráfico de red y bloquea conexiones no autorizadas según reglas de seguridad.",
+          "retroalimentacion_incorrecta": "El firewall no edita documentos ni es una contraseña: filtra y controla el tráfico de red según reglas de seguridad."
+        },
+        {
+          "id": "seg-11",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Qué es la ingeniería social en el contexto de la seguridad informática?",
+          "opciones": [
+            "Técnicas de manipulación psicológica para engañar a una persona y que revele información confidencial",
+            "Un curso universitario sobre redes sociales",
+            "Un tipo de antivirus avanzado",
+            "Un método para reparar computadoras en equipo"
+          ],
+          "respuesta_correcta": "Técnicas de manipulación psicológica para engañar a una persona y que revele información confidencial",
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, la ingeniería social manipula psicológicamente a la víctima para obtener información confidencial.",
+          "retroalimentacion_incorrecta": "La ingeniería social no es un curso ni un antivirus: son técnicas de manipulación para obtener información confidencial de una persona."
+        },
+        {
+          "id": "seg-12",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué debes hacer antes de hacer clic en un enlace que no reconoces o parece sospechoso?",
+          "respuesta_correcta": "Verificar la fuente y el remitente, revisar que la dirección del enlace sea legítima, y si hay duda, no hacer clic y consultar o eliminar el mensaje.",
+          "respuestas_alternativas": [
+            "Revisar de dónde viene y si parece confiable antes de hacer clic; si hay duda, no abrirlo",
+            "Comprobar que el remitente y el enlace sean confiables, y evitar hacer clic si hay sospecha"
+          ],
+          "dificultad": "basico",
+          "retroalimentacion_correcta": "Correcto, verificar la fuente y el enlace antes de hacer clic ayuda a evitar caer en fraudes.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que hay que verificar el remitente y la dirección del enlace, y evitar hacer clic si algo parece sospechoso."
+        },
+        {
+          "id": "seg-13",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Por qué es recomendable mantener actualizado el antivirus y el sistema operativo?",
+          "respuesta_correcta": "Porque las actualizaciones corrigen vulnerabilidades de seguridad recién descubiertas y agregan protección contra amenazas nuevas, reduciendo el riesgo de ataques.",
+          "respuestas_alternativas": [
+            "Las actualizaciones cierran huecos de seguridad y protegen contra amenazas nuevas",
+            "Mantenerlos actualizados corrige fallas de seguridad y previene ataques recientes"
+          ],
+          "dificultad": "intermedio",
+          "retroalimentacion_correcta": "Correcto, las actualizaciones corrigen vulnerabilidades y protegen contra amenazas nuevas.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que las actualizaciones corrigen vulnerabilidades de seguridad y protegen contra amenazas recientes."
+        },
+        {
+          "id": "seg-14",
+          "tipo": "respuesta_corta",
+          "enunciado": "¿Qué es el ransomware y por qué es peligroso?",
+          "respuesta_correcta": "Es un tipo de malware que cifra o bloquea el acceso a los archivos de la víctima y exige un pago (rescate) para liberarlos, siendo peligroso porque puede hacer perder información valiosa.",
+          "respuestas_alternativas": [
+            "Un virus que bloquea o encripta tus archivos y pide dinero para devolverlos",
+            "Es un malware que secuestra tus datos y exige pago para recuperarlos, muy dañino si no hay respaldo"
+          ],
+          "dificultad": "avanzado",
+          "retroalimentacion_correcta": "Correcto, el ransomware bloquea/cifra archivos y exige un pago para liberarlos, siendo muy dañino sin un respaldo.",
+          "retroalimentacion_incorrecta": "Te faltó explicar que el ransomware cifra o bloquea archivos y exige un pago (rescate) para devolverlos."
+        }
+      ]
+    }
+  ]
+}

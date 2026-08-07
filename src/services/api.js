@@ -357,7 +357,7 @@ export const studentService = {
     try {
       console.log('Obteniendo progreso del estudiante...');
     const response = await api.get('/student/my-progress');
-      
+
       if (!response.data?.status || !response.data?.data) {
         throw new Error('Formato de respuesta inválido');
       }
@@ -367,6 +367,11 @@ export const studentService = {
       console.error('Error al obtener progreso:', error);
       throw error;
     }
+  },
+
+  getMyCourses: async () => {
+    const response = await api.get('/student/my-courses');
+    return response.data.data;
   }
 };
 
@@ -513,22 +518,22 @@ export const resultService = {
 export const assignmentService = {
   getAll: async () => {
     const response = await api.get('/assignments');
-    return response.data;
+    return response.data.data;
   },
 
   getById: async (id) => {
     const response = await api.get(`/assignments/${id}`);
-    return response.data;
+    return response.data.data;
   },
 
   create: async (assignmentData) => {
     const response = await api.post('/assignments', assignmentData);
-    return response.data;
+    return response.data.data;
   },
 
   update: async (id, assignmentData) => {
     const response = await api.put(`/assignments/${id}`, assignmentData);
-    return response.data;
+    return response.data.data;
   },
 
   delete: async (id) => {
@@ -621,12 +626,12 @@ export const subjectService = {
 export const topicService = {
   getAll: async () => {
     const response = await api.get('/topics');
-    return response.data;
+    return response.data.data;
   },
 
   getById: async (id) => {
     const response = await api.get(`/topics/${id}`);
-    return response.data;
+    return response.data.data;
   },
 
   create: async (topicData) => {

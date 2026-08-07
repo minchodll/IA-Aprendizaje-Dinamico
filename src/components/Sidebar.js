@@ -16,6 +16,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PersonIcon from '@mui/icons-material/Person';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', permission: 'dashboard' },
@@ -29,8 +30,9 @@ const menuItems = [
   { text: 'Exámenes', icon: <QuizIcon />, path: '/exams', permission: 'exams' },
   { text: 'Preguntas', icon: <QuestionAnswerIcon />, path: '/questions', permission: 'questions' },
   { text: 'Resultados', icon: <EmojiEventsIcon />, path: '/results', permission: 'results' },
-  // { text: 'Asignaciones', icon: <AssignmentIcon />, path: '/assignments', permission: 'assignments' },
+  { text: 'Asignaciones', icon: <AssignmentIcon />, path: '/assignments', permission: 'assignments' },
   { text: 'Asignar Exámenes', icon: <AssignmentTurnedInIcon />, path: '/exam-assignments', permission: 'exam-assignments' },
+  { text: 'Mis Cursos', icon: <MenuBookIcon />, path: '/my-courses', permission: 'take-exam' },
   { text: 'Resolver Examen', icon: <PlayArrowIcon />, path: '/take-exam', permission: 'take-exam' },
   { text: 'Recomendaciones', icon: <LightbulbIcon />, path: '/recommendations', permission: 'recommendations' },
 ];
@@ -61,8 +63,8 @@ const Sidebar = ({ onNavigate, user, hasPermission }) => {
     contenido: filteredMenuItems.filter(item => 
       ['topics', 'topic-templates', 'exams', 'questions'].includes(item.permission)
     ),
-    evaluacion: filteredMenuItems.filter(item => 
-      ['results', 'assignments', 'take-exam', 'recommendations'].includes(item.permission)
+    evaluacion: filteredMenuItems.filter(item =>
+      ['results', 'assignments', 'exam-assignments', 'take-exam', 'recommendations'].includes(item.permission)
     )
   };
 

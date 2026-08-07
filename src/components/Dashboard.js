@@ -55,7 +55,7 @@ const Dashboard = ({ user, onLogout }) => {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('auth_token');
-      const response = await axios.get('https://apievaluacion.guateaaps.com/api/dashboard', {
+      const response = await axios.get('http://localhost:8000/api/dashboard', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

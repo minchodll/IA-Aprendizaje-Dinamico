@@ -11,13 +11,14 @@ import Students from './components/Students';
 import Grades from './components/Grades';
 import Sections from './components/Sections';
 import Subjects from './components/Subjects';
-import TopicsList from './components/TopicsList';
+import Topics from './components/Topics';
 import TopicTemplates from './components/TopicTemplates';
 import Exams from './components/Exams';
 import Questions from './components/Questions';
 import Recommendations from './components/Recommendations';
 import ExamAssignments from './components/ExamAssignments';
 import TakeExam from './components/TakeExam';
+import MyCourses from './components/MyCourses';
 import AccessDenied from './components/AccessDenied';
 import { authService, api } from './services/api';
 
@@ -300,7 +301,7 @@ function App() {
       Content = hasPermission('subjects') ? <Subjects user={user} /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
       break;
     case '/topics': 
-      Content = hasPermission('topics') ? <TopicsList /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
+      Content = hasPermission('topics') ? <Topics /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
       break;
     case '/topic-templates': 
       Content = hasPermission('topic-templates') ? <TopicTemplates /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
@@ -323,8 +324,11 @@ function App() {
                 case '/exam-assignments': 
               Content = hasPermission('exam-assignments') ? <ExamAssignments user={user} /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
               break;
-            case '/take-exam': 
-              Content = hasPermission('take-exam') ? <TakeExam user={user} /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
+            case '/take-exam':
+              Content = hasPermission('take-exam') ? <TakeExam user={user} /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
+              break;
+            case '/my-courses':
+              Content = hasPermission('take-exam') ? <MyCourses /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
     default: 
       Content = <Dashboard user={user} onLogout={handleLogout} />;

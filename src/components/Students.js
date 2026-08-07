@@ -64,7 +64,7 @@ const Students = () => {
     password_confirmation: '',
     clave: '',
     grado_id: '',
-    seccion: ''
+    section_id: ''
   });
 
   // Cargar datos al montar el componente
@@ -142,7 +142,7 @@ const Students = () => {
         password_confirmation: '',
         clave: student.clave || '',
         grado_id: (student.grado_id && typeof student.grado_id === 'object') ? student.grado_id.id : (student.grado_id || ''),
-        seccion: student.seccion || ''
+        section_id: student.section_id || ''
       });
     } else {
       setEditingStudent(null);
@@ -154,7 +154,7 @@ const Students = () => {
         password_confirmation: '',
         clave: '',
         grado_id: '',
-        seccion: ''
+        section_id: ''
       });
     }
     setOpenDialog(true);
@@ -711,8 +711,8 @@ const Students = () => {
                 <FormControl fullWidth margin="dense">
                   <InputLabel>Sección</InputLabel>
                   <Select
-                    name="seccion"
-                    value={formData.seccion}
+                    name="section_id"
+                    value={formData.section_id}
                     onChange={handleInputChange}
                     label="Sección"
                     MenuProps={{
@@ -729,10 +729,13 @@ const Students = () => {
                         Sin sección
                       </Typography>
                     </MenuItem>
-                    <MenuItem value="A">Sección A</MenuItem>
-                    <MenuItem value="B">Sección B</MenuItem>
-                    <MenuItem value="C">Sección C</MenuItem>
-                    <MenuItem value="D">Sección D</MenuItem>
+                    {sections
+                      .filter((sec) => !formData.grado_id || String(sec.grade_id) === String(formData.grado_id))
+                      .map((sec) => (
+                        <MenuItem key={sec.id} value={sec.id}>
+                          Sección {sec.nombre}
+                        </MenuItem>
+                      ))}
                   </Select>
                   {sections.length === 0 && !loadingSections && (
                     <Typography variant="caption" color="warning">

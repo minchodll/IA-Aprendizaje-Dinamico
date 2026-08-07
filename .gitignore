@@ -27,6 +27,12 @@
 .env.*
 !.env.example
 
+# Microservicio de IA (Python)
+/ai-service/venv
+/ai-service/models
+/ai-service/__pycache__
+*.pyc
+
 # Logs y Archivos Temporales
 *.log
 npm-debug.log*
@@ -36,3 +42,6 @@ yarn-error.log*
 .cache
 .parcel-cache
 .vite/
+
+# Configuracion local de Claude Code (no compartir)
+.claude/settings.local.json

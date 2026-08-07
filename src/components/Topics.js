@@ -155,10 +155,10 @@ const Topics = () => {
         handleClose();
       } else {
         const response = await topicService.create(form);
-        
+
         // Si se generó un examen automáticamente, mostrarlo
-        if (response.exam_generado) {
-          setGeneratedExam(response.exam_generado);
+        if (response.generated_exam) {
+          setGeneratedExam(response.generated_exam);
           setShowExamDetails(true);
         } else {
           await loadData();
@@ -186,7 +186,7 @@ const Topics = () => {
     try {
       setError(null);
       const response = await topicService.generateExam(topicId);
-      setGeneratedExam(response);
+      setGeneratedExam(response.data);
       setShowExamDetails(true);
     } catch (err) {
       setError('Error al generar examen: ' + (err.response?.data?.message || err.message));
@@ -216,6 +216,30 @@ const Topics = () => {
       avanzado: 'error'
     };
     return colors[level] || 'default';
+  };
+
+  const getTipoLabel = (tipo) => {
+    const labels = {
+      multiple_choice: 'Opción Múltiple',
+      opcion_multiple: 'Opción Múltiple',
+      respuesta_corta: 'Respuesta Corta',
+    };
+    return labels[tipo] || tipo;
+  };
+
+  // opciones llega como string JSON desde la columna JSON de MySQL (mysql2 no
+  // la parsea automáticamente); en preguntas de respuesta_corta no aplica.
+  const parseOpciones = (opciones) => {
+    if (Array.isArray(opciones)) return opciones;
+    if (typeof opciones === 'string') {
+      try {
+        const parsed = JSON.parse(opciones);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
   };
 
   if (loading) {
@@ -585,11 +609,11 @@ const Topics = () => {
                               secondary={
                                 <Box>
                                   <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                                    <strong>Tipo:</strong> {question.tipo === 'multiple_choice' ? 'Opción Múltiple' : 'Verdadero/Falso'}
+                                    <strong>Tipo:</strong> {getTipoLabel(question.tipo)}
                                   </Typography>
-                                  {question.opciones && (
+                                  {parseOpciones(question.opciones).length > 0 && (
                                     <Typography variant="body2" color="textSecondary" sx={{ mt: 0.5 }}>
-                                      <strong>Opciones:</strong> {question.opciones.join(', ')}
+                                      <strong>Opciones:</strong> {parseOpciones(question.opciones).join(', ')}
                                     </Typography>
                                   )}
                                   <Typography variant="body2" color="textSecondary" sx={{ mt: 0.5 }}>

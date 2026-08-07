@@ -9,7 +9,6 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   Assignment as AssignmentIcon,
-  Group as GroupIcon,
   School as SchoolIcon,
   Refresh as RefreshIcon,
   CheckCircle as CheckCircleIcon,
@@ -50,20 +49,20 @@ const ExamAssignments = ({ user }) => {
     if (selectedGrade && selectedSection) {
       const filtered = students.filter(student => {
         const matchesGrade = student.grado_id == selectedGrade;
-        const matchesSection = student.seccion === selectedSection; // Comparar como string
-        
+        const matchesSection = student.section_id == selectedSection;
+
         if (!matchesGrade || !matchesSection) {
           console.log('Estudiante no coincide:', {
             studentId: student.id,
             studentGrade: student.grado_id,
-            studentSection: student.seccion,
+            studentSection: student.section_id,
             selectedGrade,
             selectedSection,
             matchesGrade,
             matchesSection
           });
         }
-        
+
         return matchesGrade && matchesSection;
       });
 
@@ -252,8 +251,7 @@ const ExamAssignments = ({ user }) => {
           await examAssignmentService.create({
             exam_id: selectedExam,
             student_id: studentId,
-            assigned_at: new Date().toISOString(),
-            status: 'pending'
+            fecha_limite: null
           });
           console.log(`Examen asignado exitosamente al estudiante ${studentId}`);
         } catch (studentError) {
@@ -310,9 +308,8 @@ const ExamAssignments = ({ user }) => {
       const response = await examAssignmentService.assignToGradeSection({
         exam_id: selectedExam,
         grade_id: selectedGrade,
-        section: selectedSection,
-        assigned_at: new Date().toISOString(),
-        status: 'pending'
+        section_id: selectedSection,
+        fecha_limite: null
       });
 
       console.log('Asignación masiva completada:', response);
@@ -354,6 +351,11 @@ const ExamAssignments = ({ user }) => {
   const getExamName = (examId) => {
     const exam = exams.find(e => e.id == examId);
     return exam ? exam.titulo : 'Examen no encontrado';
+  };
+
+  const getStudentName = (studentId) => {
+    const student = students.find(s => s.id == studentId);
+    return student ? student.nombre_completo : 'Estudiante no encontrado';
   };
 
   const getGradeName = (gradeId) => {
@@ -441,7 +443,7 @@ const ExamAssignments = ({ user }) => {
                 Pendientes
               </Typography>
               <Typography variant="h4" component="div">
-                {assignments.filter(a => a.status === 'pending').length}
+                {assignments.filter(a => a.estado === 'pendiente').length}
               </Typography>
             </CardContent>
           </Card>
@@ -453,7 +455,7 @@ const ExamAssignments = ({ user }) => {
                 Completados
               </Typography>
               <Typography variant="h4" component="div">
-                {assignments.filter(a => a.status === 'completed').length}
+                {assignments.filter(a => a.estado === 'completado').length}
               </Typography>
             </CardContent>
           </Card>
@@ -477,11 +479,10 @@ const ExamAssignments = ({ user }) => {
         <Table>
           <TableHead sx={{ background: '#1976d2' }}>
             <TableRow>
+              <TableCell sx={{ color: '#fff' }}>Estudiante</TableCell>
               <TableCell sx={{ color: '#fff' }}>Examen</TableCell>
-              <TableCell sx={{ color: '#fff' }}>Grado</TableCell>
-              <TableCell sx={{ color: '#fff' }}>Sección</TableCell>
-              <TableCell sx={{ color: '#fff' }}>Estudiantes</TableCell>
               <TableCell sx={{ color: '#fff' }}>Fecha Asignación</TableCell>
+              <TableCell sx={{ color: '#fff' }}>Fecha Límite</TableCell>
               <TableCell sx={{ color: '#fff' }}>Estado</TableCell>
               <TableCell sx={{ color: '#fff' }} align="right">Acciones</TableCell>
             </TableRow>
@@ -489,7 +490,7 @@ const ExamAssignments = ({ user }) => {
           <TableBody>
             {assignments.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                   <Typography variant="body1" color="textSecondary">
                     No hay asignaciones de exámenes
                   </Typography>
@@ -499,47 +500,37 @@ const ExamAssignments = ({ user }) => {
               assignments.map((assignment) => (
                 <TableRow key={assignment.id} hover>
                   <TableCell>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      {assignment.exam?.titulo}
-                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <SchoolIcon fontSize="small" color="action" />
+                      {getStudentName(assignment.student_id)}
+                    </Box>
                   </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={assignment.grade?.nombre} 
-                      color="primary" 
-                      size="small"
-                      icon={<SchoolIcon />}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Chip 
-                      label={assignment.section?.nombre} 
-                      color="secondary" 
-                      size="small"
-                      icon={<GroupIcon />}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {assignment.students?.length || 0} estudiantes
+                    <Typography variant="body2" fontWeight="bold">
+                      {getExamName(assignment.exam_id)}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2">
-                      {formatDate(assignment.assigned_at)}
+                      {formatDate(assignment.fecha_asignacion)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                      {assignment.fecha_limite ? formatDate(assignment.fecha_limite) : '-'}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={assignment.status === 'pending' ? 'Pendiente' : 'Completado'}
-                      color={assignment.status === 'pending' ? 'warning' : 'success'}
+                      label={assignment.estado === 'pendiente' ? 'Pendiente' : 'Completado'}
+                      color={assignment.estado === 'pendiente' ? 'warning' : 'success'}
                       size="small"
-                      icon={assignment.status === 'pending' ? <CancelIcon /> : <CheckCircleIcon />}
+                      icon={assignment.estado === 'pendiente' ? <CancelIcon /> : <CheckCircleIcon />}
                     />
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton 
-                      color="error" 
+                    <IconButton
+                      color="error"
                       onClick={() => handleDeleteAssignment(assignment.id)}
                       title="Eliminar asignación"
                     >
@@ -611,7 +602,7 @@ const ExamAssignments = ({ user }) => {
                   label="Sección"
                 >
                   {sections.map((section) => (
-                    <MenuItem key={section.id} value={section.nombre}>
+                    <MenuItem key={section.id} value={section.id}>
                       {section.nombre}
                     </MenuItem>
                   ))}
@@ -662,12 +653,12 @@ const ExamAssignments = ({ user }) => {
                       <ListItemText
                         primary={
                           <Typography variant="subtitle1">
-                            {student.nombre} {student.apellido}
+                            {student.nombre_completo}
                           </Typography>
                         }
                         secondary={
                           <Typography variant="body2" color="textSecondary">
-                            ID: {student.codigo}
+                            {student.usuario} · {student.email}
                           </Typography>
                         }
                       />

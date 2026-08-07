@@ -3,7 +3,7 @@ import {
   Box, Typography, Button, Card, CardContent, CardActions, Alert, CircularProgress,
   Dialog, DialogTitle, DialogContent, DialogActions, Radio, RadioGroup,
   FormControl, FormLabel, Chip, LinearProgress, Paper, Divider, List, ListItem, ListItemText,
-  ListItemIcon, Stack, Grid
+  ListItemIcon, Stack, Grid, TextField
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -131,20 +131,6 @@ const TakeExam = ({ user }) => {
         throw new Error('El examen no tiene preguntas configuradas');
       }
 
-      // Verificar estructura de las preguntas
-      examData.questions.forEach((question, index) => {
-        console.log(`Pregunta ${index + 1}:`, {
-          id: question.id,
-          enunciado: question.enunciado,
-          opciones: {
-            a: question.opcion_a,
-            b: question.opcion_b,
-            c: question.opcion_c,
-            d: question.opcion_d
-          }
-        });
-      });
-      
       setQuestions(examData.questions);
       setCurrentExam(assignedExam);
       setTimeLeft(assignedExam.exam.duracion_minutos * 60);
@@ -208,6 +194,21 @@ const TakeExam = ({ user }) => {
     });
   };
 
+  // opciones llega como string JSON desde la columna JSON de MySQL (mysql2 no
+  // la parsea automáticamente); en preguntas de respuesta_corta no aplica.
+  const parseOpciones = (opciones) => {
+    if (Array.isArray(opciones)) return opciones;
+    if (typeof opciones === 'string') {
+      try {
+        const parsed = JSON.parse(opciones);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  };
+
   const getStatusColor = (status) => {
     return status === 'pending' ? 'warning' : 'success';
   };
@@ -228,20 +229,6 @@ const TakeExam = ({ user }) => {
   if (examStarted && currentExam) {
     const currentQuestion = questions[currentQuestionIndex];
     const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-
-    console.log('Renderizando pregunta actual:', {
-      index: currentQuestionIndex,
-      question: currentQuestion,
-      questionKeys: currentQuestion ? Object.keys(currentQuestion) : [],
-      opciones: currentQuestion ? {
-        a: currentQuestion.opcion_a,
-        b: currentQuestion.opcion_b,
-        c: currentQuestion.opcion_c,
-        d: currentQuestion.opcion_d
-      } : null,
-      selectedAnswer: answers[currentQuestion?.id],
-      totalQuestions: questions.length
-    });
 
     // Si no hay pregunta actual, mostrar error
     if (!currentQuestion) {
@@ -309,8 +296,8 @@ const TakeExam = ({ user }) => {
               <Typography variant="h6" sx={{ color: 'primary.main' }}>
                 Pregunta {currentQuestionIndex + 1} de {questions.length}
               </Typography>
-              <Chip 
-                label={`${currentQuestion.puntaje} ${currentQuestion.puntaje > 1 ? 'puntos' : 'punto'}`}
+              <Chip
+                label={currentQuestion.tipo === 'respuesta_corta' ? 'Respuesta Corta' : 'Opción Múltiple'}
                 color="primary"
                 variant="outlined"
                 size="small"
@@ -330,57 +317,68 @@ const TakeExam = ({ user }) => {
             </Typography>
 
             {/* Opciones de respuesta */}
-            <FormControl component="fieldset" fullWidth>
-              <FormLabel component="legend" sx={{ mb: 2, color: 'text.primary' }}>
-                Selecciona la respuesta correcta:
-              </FormLabel>
-              <RadioGroup
-                value={answers[currentQuestion.id] || ''}
-                onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-              >
-                <Stack spacing={2}>
-                  {[
-                    { key: 'a', value: currentQuestion.opcion_a },
-                    { key: 'b', value: currentQuestion.opcion_b },
-                    { key: 'c', value: currentQuestion.opcion_c },
-                    { key: 'd', value: currentQuestion.opcion_d }
-                  ].filter(opcion => opcion.value).map((opcion) => (
-                    <Paper
-                      key={opcion.key}
-                      sx={{
-                        p: 2,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        bgcolor: answers[currentQuestion.id] === opcion.value ? 'primary.main' : 'background.paper',
-                        color: answers[currentQuestion.id] === opcion.value ? 'primary.contrastText' : 'text.primary',
-                        '&:hover': {
-                          bgcolor: answers[currentQuestion.id] === opcion.value ? 'primary.dark' : 'grey.100',
-                          transform: 'translateX(8px)'
-                        }
-                      }}
-                      onClick={() => handleAnswerChange(currentQuestion.id, opcion.value)}
-                      elevation={answers[currentQuestion.id] === opcion.value ? 3 : 1}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Radio
-                          checked={answers[currentQuestion.id] === opcion.value}
-                          value={opcion.value}
-                          sx={{
-                            color: answers[currentQuestion.id] === opcion.value ? 'primary.contrastText' : 'primary.main',
-                            '&.Mui-checked': {
-                              color: answers[currentQuestion.id] === opcion.value ? 'primary.contrastText' : 'primary.main'
-                            }
-                          }}
-                        />
-                        <Typography>
-                          {opcion.key.toUpperCase()}) {opcion.value}
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  ))}
-                </Stack>
-              </RadioGroup>
-            </FormControl>
+            {currentQuestion.tipo === 'respuesta_corta' ? (
+              <FormControl component="fieldset" fullWidth>
+                <FormLabel component="legend" sx={{ mb: 2, color: 'text.primary' }}>
+                  Escribe tu respuesta:
+                </FormLabel>
+                <TextField
+                  multiline
+                  minRows={3}
+                  fullWidth
+                  placeholder="Escribe tu respuesta aquí..."
+                  value={answers[currentQuestion.id] || ''}
+                  onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                />
+              </FormControl>
+            ) : (
+              <FormControl component="fieldset" fullWidth>
+                <FormLabel component="legend" sx={{ mb: 2, color: 'text.primary' }}>
+                  Selecciona la respuesta correcta:
+                </FormLabel>
+                <RadioGroup
+                  value={answers[currentQuestion.id] || ''}
+                  onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                >
+                  <Stack spacing={2}>
+                    {parseOpciones(currentQuestion.opciones).map((opcionValue, opcionIndex) => (
+                      <Paper
+                        key={opcionIndex}
+                        sx={{
+                          p: 2,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          bgcolor: answers[currentQuestion.id] === opcionValue ? 'primary.main' : 'background.paper',
+                          color: answers[currentQuestion.id] === opcionValue ? 'primary.contrastText' : 'text.primary',
+                          '&:hover': {
+                            bgcolor: answers[currentQuestion.id] === opcionValue ? 'primary.dark' : 'grey.100',
+                            transform: 'translateX(8px)'
+                          }
+                        }}
+                        onClick={() => handleAnswerChange(currentQuestion.id, opcionValue)}
+                        elevation={answers[currentQuestion.id] === opcionValue ? 3 : 1}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Radio
+                            checked={answers[currentQuestion.id] === opcionValue}
+                            value={opcionValue}
+                            sx={{
+                              color: answers[currentQuestion.id] === opcionValue ? 'primary.contrastText' : 'primary.main',
+                              '&.Mui-checked': {
+                                color: answers[currentQuestion.id] === opcionValue ? 'primary.contrastText' : 'primary.main'
+                              }
+                            }}
+                          />
+                          <Typography>
+                            {String.fromCharCode(65 + opcionIndex)}) {opcionValue}
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    ))}
+                  </Stack>
+                </RadioGroup>
+              </FormControl>
+            )}
           </CardContent>
         </Card>
 
@@ -437,44 +435,79 @@ const TakeExam = ({ user }) => {
         <Dialog open={showResultsDialog} onClose={() => setShowResultsDialog(false)} maxWidth="sm" fullWidth>
           <DialogTitle>Resultados del Examen</DialogTitle>
           <DialogContent>
-            {examResults && (
-              <Box>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Typography variant="h6" color="primary">
-                      {examResults.percentage.toFixed(1)}%
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Calificación
-                    </Typography>
+            {examResults && (() => {
+              const puntajeObtenido = Number(examResults.puntaje_obtenido) || 0;
+              const puntajeTotal = Number(examResults.puntaje_total) || 100;
+              const percentage = puntajeTotal > 0 ? (puntajeObtenido / puntajeTotal) * 100 : 0;
+              const detalle = examResults.detalle_ia || [];
+              const correctas = detalle.filter((d) => d.correcto).length;
+              const grade = percentage >= 60 ? 'Aprobado' : 'Reprobado';
+
+              return (
+                <Box>
+                  <Grid container spacing={2} sx={{ mb: 2 }}>
+                    <Grid item xs={6}>
+                      <Typography variant="h6" color="primary">
+                        {percentage.toFixed(1)}%
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Calificación
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="h6" color={grade === 'Aprobado' ? 'success.main' : 'error.main'}>
+                        {grade}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Estado
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="h6">
+                        {correctas}/{detalle.length}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Respuestas Correctas
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="h6">
+                        {puntajeObtenido.toFixed(0)}/{puntajeTotal.toFixed(0)}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Puntos Obtenidos
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="h6" color={examResults.grade === 'Aprobado' ? 'success.main' : 'error.main'}>
-                      {examResults.grade}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Estado
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="h6">
-                      {examResults.correct_answers}/{examResults.total_questions}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Respuestas Correctas
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="h6">
-                      {examResults.earned_score}/{examResults.total_score}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Puntos Obtenidos
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-            )}
+
+                  {detalle.length > 0 && (
+                    <>
+                      <Divider sx={{ mb: 2 }} />
+                      <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
+                        Retroalimentación por pregunta
+                      </Typography>
+                      <List dense>
+                        {detalle.map((d, index) => (
+                          <ListItem key={d.question_id || index} alignItems="flex-start">
+                            <ListItemIcon>
+                              {d.correcto ? (
+                                <CheckCircleIcon color="success" />
+                              ) : (
+                                <CancelIcon color="error" />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={`Pregunta ${index + 1}`}
+                              secondary={d.retroalimentacion}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </>
+                  )}
+                </Box>
+              );
+            })()}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => {
