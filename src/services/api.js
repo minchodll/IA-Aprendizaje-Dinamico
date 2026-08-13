@@ -414,6 +414,11 @@ export const teacherService = {
   getStudentsProgress: async () => {
     const response = await api.get('/teacher/students-progress');
     return response.data.data;
+  },
+
+  getClassReport: async () => {
+    const response = await api.get('/teacher/class-report');
+    return response.data.data;
   }
 };
 

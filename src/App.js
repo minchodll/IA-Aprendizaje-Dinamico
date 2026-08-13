@@ -21,6 +21,7 @@ import TakeExam from './components/TakeExam';
 import MyCourses from './components/MyCourses';
 import MyGrades from './components/MyGrades';
 import MyProgress from './components/MyProgress';
+import ClassReport from './components/ClassReport';
 import AccessDenied from './components/AccessDenied';
 import { authService, api } from './services/api';
 
@@ -337,6 +338,9 @@ function App() {
               break;
             case '/my-progress':
               Content = hasPermission('take-exam') ? <MyProgress /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
+              break;
+            case '/class-report':
+              Content = hasPermission('results') ? <ClassReport /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
     default: 
       Content = <Dashboard user={user} onLogout={handleLogout} />;

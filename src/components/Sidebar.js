@@ -19,6 +19,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', permission: 'dashboard' },
@@ -32,6 +33,7 @@ const menuItems = [
   { text: 'Exámenes', icon: <QuizIcon />, path: '/exams', permission: 'exams' },
   { text: 'Preguntas', icon: <QuestionAnswerIcon />, path: '/questions', permission: 'questions' },
   { text: 'Resultados', icon: <EmojiEventsIcon />, path: '/results', permission: 'results' },
+  { text: 'Boletín de Clase', icon: <GroupsIcon />, path: '/class-report', permission: 'results' },
   { text: 'Asignaciones', icon: <AssignmentIcon />, path: '/assignments', permission: 'assignments' },
   { text: 'Asignar Exámenes', icon: <AssignmentTurnedInIcon />, path: '/exam-assignments', permission: 'exam-assignments' },
   { text: 'Mis Cursos', icon: <MenuBookIcon />, path: '/my-courses', permission: 'take-exam' },
