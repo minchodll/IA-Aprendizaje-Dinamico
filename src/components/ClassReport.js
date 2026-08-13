@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Box, Typography, Card, CardContent, Grid, Chip, CircularProgress, Alert, Button,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, LinearProgress, Avatar
+  Box, Typography, Card, CardContent, CardActionArea, Grid, Chip, CircularProgress, Alert, Button,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, LinearProgress, Avatar,
+  Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemAvatar, ListItemText, Divider
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { teacherService } from '../services/api';
 
 const nivelColor = (nivel) => {
@@ -28,6 +30,7 @@ const ClassReport = () => {
   const [data, setData] = useState({ promedio_clase: 0, total_estudiantes: 0, examenes_realizados: 0, por_estudiante: [], temas_dificiles: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedTema, setSelectedTema] = useState(null);
 
   const loadReport = useCallback(async () => {
     try {
@@ -180,18 +183,20 @@ const ClassReport = () => {
               {temas_dificiles.map((tema) => (
                 <Grid item xs={12} md={6} key={tema.enunciado}>
                   <Card sx={{ height: '100%', borderLeft: '4px solid', borderLeftColor: 'warning.main' }}>
-                    <CardContent>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                        <Chip label={tema.tema} size="small" />
-                        <Chip label={tema.dificultad} size="small" color={nivelColor(tema.dificultad)} />
-                      </Box>
-                      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                        {tema.enunciado}
-                      </Typography>
-                      <Typography variant="caption" color="warning.main" sx={{ fontWeight: 600 }}>
-                        {tema.alumnos_afectados} {tema.alumnos_afectados === 1 ? 'alumno la falló' : 'alumnos distintos la fallaron'}
-                      </Typography>
-                    </CardContent>
+                    <CardActionArea onClick={() => setSelectedTema(tema)} sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                          <Chip label={tema.tema} size="small" />
+                          <Chip label={tema.dificultad} size="small" color={nivelColor(tema.dificultad)} />
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                          {tema.enunciado}
+                        </Typography>
+                        <Typography variant="caption" color="warning.main" sx={{ fontWeight: 600 }}>
+                          {tema.alumnos_afectados} {tema.alumnos_afectados === 1 ? 'alumno la falló' : 'alumnos distintos la fallaron'} · ver quiénes
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
                   </Card>
                 </Grid>
               ))}
@@ -199,6 +204,54 @@ const ClassReport = () => {
           )}
         </>
       )}
+
+      <Dialog open={!!selectedTema} onClose={() => setSelectedTema(null)} maxWidth="sm" fullWidth>
+        {selectedTema && (
+          <>
+            <DialogTitle>
+              <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                <Chip label={selectedTema.tema} size="small" />
+                <Chip label={selectedTema.dificultad} size="small" color={nivelColor(selectedTema.dificultad)} />
+              </Box>
+              <Typography variant="subtitle1" component="div" sx={{ fontWeight: 700 }}>{selectedTema.enunciado}</Typography>
+            </DialogTitle>
+            <DialogContent dividers>
+              <List disablePadding>
+                {selectedTema.alumnos.map((alumno, idx) => (
+                  <React.Fragment key={alumno.student_id}>
+                    <ListItem alignItems="flex-start" disableGutters>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: 'error.main' }}>{alumno.nombre?.charAt(0) || '?'}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={alumno.nombre}
+                        secondaryTypographyProps={{ component: 'div' }}
+                        secondary={
+                          <Box>
+                            <Typography variant="body2" sx={{ mt: 0.5 }}>
+                              <strong>Respondió:</strong> {alumno.respuesta_dada}
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5, mt: 1, p: 1, bgcolor: '#FFF8E1', borderRadius: 1 }}>
+                              <LightbulbIcon fontSize="small" color="warning" sx={{ mt: 0.2 }} />
+                              <Typography variant="body2" color="text.secondary">
+                                {alumno.recomendacion}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                    {idx < selectedTema.alumnos.length - 1 && <Divider component="li" sx={{ my: 1 }} />}
+                  </React.Fragment>
+                ))}
+              </List>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setSelectedTema(null)}>Cerrar</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </Box>
   );
 };
