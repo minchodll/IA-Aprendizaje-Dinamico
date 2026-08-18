@@ -8,7 +8,11 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { teacherService } from '../services/api';
+
+const MEDALS = ['🥇', '🥈', '🥉'];
+const PODIUM_COLOR = ['#F4B400', '#B0BEC5', '#CD7F32']; // oro, plata, bronce
 
 const nivelColor = (nivel) => {
   if (nivel === 'avanzado') return 'error';
@@ -58,6 +62,8 @@ const ClassReport = () => {
   }
 
   const { promedio_clase, total_estudiantes, examenes_realizados, por_estudiante, temas_dificiles } = data;
+  const conNota = por_estudiante.filter((e) => e.promedio !== null);
+  const top3 = conNota.slice(0, 3);
 
   return (
     <Box sx={{ background: '#f5f7fa', borderRadius: 3, p: 3 }}>
@@ -116,6 +122,35 @@ const ClassReport = () => {
             </Grid>
           </Grid>
 
+          {top3.length > 0 && (
+            <>
+              <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <EmojiEventsIcon sx={{ color: '#F4B400' }} /> Mejor punteo de la clase
+              </Typography>
+              <Grid container spacing={2} sx={{ mb: 3 }}>
+                {top3.map((alumno, idx) => (
+                  <Grid item xs={12} sm={4} key={alumno.student_id}>
+                    <Card sx={{ borderTop: '4px solid', borderTopColor: PODIUM_COLOR[idx] }}>
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography sx={{ fontSize: 34, lineHeight: 1 }}>{MEDALS[idx]}</Typography>
+                        <Avatar sx={{ width: 44, height: 44, mx: 'auto', mt: 1, mb: 1, bgcolor: PODIUM_COLOR[idx] }}>
+                          {alumno.nombre?.charAt(0) || '?'}
+                        </Avatar>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{alumno.nombre}</Typography>
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: porcentajeColor(alumno.promedio) }}>
+                          {alumno.promedio}%
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {alumno.examenes_realizados} examen{alumno.examenes_realizados === 1 ? '' : 'es'}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </>
+          )}
+
           <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 1 }}>
             <GroupsIcon color="primary" /> Desempeño por alumno
           </Typography>
@@ -123,6 +158,7 @@ const ClassReport = () => {
             <Table size="small">
               <TableHead>
                 <TableRow sx={{ background: '#1976d2' }}>
+                  <TableCell sx={{ color: '#fff', width: 56 }}>#</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Alumno</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Exámenes realizados</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Último examen</TableCell>
@@ -130,8 +166,19 @@ const ClassReport = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {por_estudiante.map((alumno) => (
+                {por_estudiante.map((alumno) => {
+                  const posicion = alumno.promedio !== null ? conNota.findIndex((e) => e.student_id === alumno.student_id) : -1;
+                  return (
                   <TableRow key={alumno.student_id} hover>
+                    <TableCell>
+                      {posicion === -1 ? (
+                        <Typography variant="body2" color="text.disabled">-</Typography>
+                      ) : posicion < 3 ? (
+                        <Typography sx={{ fontSize: 20 }}>{MEDALS[posicion]}</Typography>
+                      ) : (
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary' }}>{posicion + 1}</Typography>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar sx={{ width: 28, height: 28, fontSize: 14, bgcolor: 'primary.main' }}>
@@ -162,7 +209,8 @@ const ClassReport = () => {
                       )}
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
