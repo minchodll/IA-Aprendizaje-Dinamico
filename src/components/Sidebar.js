@@ -21,6 +21,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupsIcon from '@mui/icons-material/Groups';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', permission: 'dashboard' },
@@ -43,6 +44,7 @@ const menuItems = [
   { text: 'Mis Notas', icon: <AssessmentIcon />, path: '/my-grades', permission: 'take-exam' },
   { text: 'Mi Progreso', icon: <TrendingUpIcon />, path: '/my-progress', permission: 'take-exam' },
   { text: 'Recomendaciones', icon: <LightbulbIcon />, path: '/recommendations', permission: 'recommendations' },
+  { text: 'Preguntas Frecuentes', icon: <HelpOutlineIcon />, path: '/faq', permission: 'faq' },
 ];
 
 const Sidebar = ({ onNavigate, user, hasPermission }) => {
@@ -73,6 +75,9 @@ const Sidebar = ({ onNavigate, user, hasPermission }) => {
     ),
     evaluacion: filteredMenuItems.filter(item =>
       ['results', 'assignments', 'exam-assignments', 'take-exam', 'recommendations'].includes(item.permission)
+    ),
+    ayuda: filteredMenuItems.filter(item =>
+      ['faq'].includes(item.permission)
     )
   };
 
@@ -314,6 +319,42 @@ const Sidebar = ({ onNavigate, user, hasPermission }) => {
                     primaryTypographyProps={{ 
                       fontSize: '0.9rem',
                       fontWeight: 500 
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </>
+          )}
+
+          {/* Ayuda */}
+          {groupedItems.ayuda.length > 0 && (
+            <>
+              <Divider sx={{ my: 2, mx: 2, borderColor: 'rgba(255,255,255,0.2)' }} />
+              <Typography variant="caption" sx={{ px: 3, color: 'rgba(255,255,255,0.7)', fontWeight: 600, textTransform: 'uppercase' }}>
+                Ayuda
+              </Typography>
+              {groupedItems.ayuda.map((item) => (
+                <ListItem
+                  key={item.text}
+                  onClick={() => onNavigate(item.path)}
+                  sx={{
+                    borderRadius: 2,
+                    mb: 1,
+                    mx: 1,
+                    background: 'rgba(255,255,255,0.08)',
+                    '&:hover': {
+                      background: 'rgba(255,255,255,0.15)',
+                      transform: 'translateX(4px)',
+                      transition: 'all 0.2s ease-in-out',
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: '#fff', minWidth: 40 }}>{item.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={item.text}
+                    primaryTypographyProps={{
+                      fontSize: '0.9rem',
+                      fontWeight: 500
                     }}
                   />
                 </ListItem>

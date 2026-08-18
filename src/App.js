@@ -23,6 +23,7 @@ import MyGrades from './components/MyGrades';
 import MyProgress from './components/MyProgress';
 import ClassReport from './components/ClassReport';
 import ExerciseBankUpload from './components/ExerciseBankUpload';
+import FAQ from './components/FAQ';
 import AccessDenied from './components/AccessDenied';
 import { authService, api } from './services/api';
 
@@ -127,6 +128,7 @@ const modulePermissions = {
   topics: ['view topics'],
   'topic-templates': ['view topics'],
   'exercise-bank': ['manage topics'],
+  faq: ['view dashboard'],
   exams: ['view exams'],
   questions: ['view questions'],
   results: ['view results'],
@@ -346,6 +348,9 @@ function App() {
               break;
             case '/exercise-bank':
               Content = hasPermission('exercise-bank') ? <ExerciseBankUpload user={user} /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
+              break;
+            case '/faq':
+              Content = <FAQ />;
               break;
     default: 
       Content = <Dashboard user={user} onLogout={handleLogout} />;
