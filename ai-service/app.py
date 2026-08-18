@@ -21,9 +21,11 @@ Correr con:
 
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import Response
 from pydantic import BaseModel
 
+import bank_editor
 import classifier
 import evaluator
 import generator
@@ -40,6 +42,10 @@ class GenerarRequest(BaseModel):
 class EvaluarRequest(BaseModel):
     ejercicio_id: str
     respuesta_alumno: str
+
+
+class ConfirmarTemaRequest(BaseModel):
+    tema: dict
 
 
 @app.get("/health")
@@ -65,3 +71,30 @@ def generar_ejercicio(req: GenerarRequest):
 @app.post("/evaluar-respuesta")
 def evaluar_respuesta(req: EvaluarRequest):
     return evaluator.evaluar_respuesta(req.ejercicio_id, req.respuesta_alumno)
+
+
+# ---- Plantilla para que un docente proponga un tema/ejercicios nuevos ----
+# (ver bank_editor.py para el detalle del flujo plantilla -> preview -> confirmar)
+
+@app.get("/plantilla-banco")
+def plantilla_banco():
+    contenido = bank_editor.generar_plantilla()
+    return Response(
+        content=contenido,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": "attachment; filename=plantilla-tema.docx"},
+    )
+
+
+@app.post("/banco/preview")
+async def banco_preview(archivo: UploadFile = File(...)):
+    contenido = await archivo.read()
+    try:
+        return bank_editor.parsear_docx(contenido)
+    except Exception as e:
+        return {"tema": None, "errores": [f"No se pudo leer el documento: {e}"], "advertencias": []}
+
+
+@app.post("/banco/confirmar")
+def banco_confirmar(req: ConfirmarTemaRequest):
+    return bank_editor.agregar_tema_al_banco(req.tema)

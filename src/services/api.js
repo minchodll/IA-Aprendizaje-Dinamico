@@ -47,13 +47,20 @@ api.interceptors.request.use(
       return Promise.reject(new Error('No auth token found'));
     }
 
-    // Configurar headers con el token
+    // Configurar headers con el token. Si el body es FormData (subida de
+    // archivos) NO se fuerza Content-Type: application/json — el navegador
+    // debe generar el suyo con el "boundary" que multer necesita, o el
+    // multipart llega sin partes y el backend ve la subida como vacía.
+    const esFormData = typeof FormData !== 'undefined' && config.data instanceof FormData;
     config.headers = {
       ...config.headers,
       'Authorization': token,
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      ...(esFormData ? {} : { 'Content-Type': 'application/json' }),
     };
+    if (esFormData) {
+      delete config.headers['Content-Type'];
+    }
     
     // Log de la petición
     console.log('Request:', {
@@ -389,6 +396,26 @@ export const studentService = {
 
   getMyGrades: async () => {
     const response = await api.get('/student/my-grades');
+    return response.data.data;
+  }
+};
+
+// Servicio para proponer temas/ejercicios nuevos al banco via plantilla Word
+export const exerciseBankService = {
+  downloadTemplate: async () => {
+    const response = await api.get('/exercise-bank/plantilla', { responseType: 'blob' });
+    downloadBlob(response.data, 'plantilla-tema.docx');
+  },
+
+  preview: async (file) => {
+    const formData = new FormData();
+    formData.append('archivo', file);
+    const response = await api.post('/exercise-bank/preview', formData);
+    return response.data.data;
+  },
+
+  confirm: async (tema) => {
+    const response = await api.post('/exercise-bank/confirm', { tema });
     return response.data.data;
   }
 };

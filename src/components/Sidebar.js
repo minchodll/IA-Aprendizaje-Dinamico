@@ -20,6 +20,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupsIcon from '@mui/icons-material/Groups';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', permission: 'dashboard' },
@@ -30,6 +31,7 @@ const menuItems = [
   { text: 'Materias', icon: <BookIcon />, path: '/subjects', permission: 'subjects' },
   { text: 'Temas', icon: <TopicIcon />, path: '/topics', permission: 'topics' },
   { text: 'Plantillas de Temas', icon: <AutoAwesomeIcon />, path: '/topic-templates', permission: 'topic-templates' },
+  { text: 'Cargar Banco de Ejercicios', icon: <UploadFileIcon />, path: '/exercise-bank', permission: 'exercise-bank' },
   { text: 'Exámenes', icon: <QuizIcon />, path: '/exams', permission: 'exams' },
   { text: 'Preguntas', icon: <QuestionAnswerIcon />, path: '/questions', permission: 'questions' },
   { text: 'Resultados', icon: <EmojiEventsIcon />, path: '/results', permission: 'results' },
@@ -66,8 +68,8 @@ const Sidebar = ({ onNavigate, user, hasPermission }) => {
     academico: filteredMenuItems.filter(item => 
       ['grades', 'sections', 'subjects'].includes(item.permission)
     ),
-    contenido: filteredMenuItems.filter(item => 
-      ['topics', 'topic-templates', 'exams', 'questions'].includes(item.permission)
+    contenido: filteredMenuItems.filter(item =>
+      ['topics', 'topic-templates', 'exams', 'questions', 'exercise-bank'].includes(item.permission)
     ),
     evaluacion: filteredMenuItems.filter(item =>
       ['results', 'assignments', 'exam-assignments', 'take-exam', 'recommendations'].includes(item.permission)
