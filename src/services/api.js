@@ -150,6 +150,19 @@ api.interceptors.response.use(
   }
 );
 
+// Dispara la descarga de un blob (usado para exportar PDF/CSV) sin depender
+// de un <a href> normal, porque esos endpoints requieren el header de auth.
+const downloadBlob = (blob, filename) => {
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+};
+
 // Servicios de autenticación
 export const authService = {
   login: async (credentials) => {
@@ -419,6 +432,21 @@ export const teacherService = {
   getClassReport: async () => {
     const response = await api.get('/teacher/class-report');
     return response.data.data;
+  },
+
+  downloadClassReportPdf: async () => {
+    const response = await api.get('/teacher/class-report/pdf', { responseType: 'blob' });
+    downloadBlob(response.data, 'boletin-de-clase.pdf');
+  },
+
+  downloadClassReportCsv: async () => {
+    const response = await api.get('/teacher/class-report/csv', { responseType: 'blob' });
+    downloadBlob(response.data, 'boletin-de-clase.csv');
+  },
+
+  downloadStudentReportPdf: async (studentId, nombreArchivo) => {
+    const response = await api.get(`/teacher/student-report/${studentId}/pdf`, { responseType: 'blob' });
+    downloadBlob(response.data, nombreArchivo || `reporte-alumno-${studentId}.pdf`);
   }
 };
 

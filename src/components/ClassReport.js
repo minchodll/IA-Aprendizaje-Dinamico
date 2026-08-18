@@ -2,13 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box, Typography, Card, CardContent, CardActionArea, Grid, Chip, CircularProgress, Alert, Button,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, LinearProgress, Avatar,
-  Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemAvatar, ListItemText, Divider
+  Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemAvatar, ListItemText, Divider,
+  IconButton, Tooltip
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import { teacherService } from '../services/api';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -35,6 +38,19 @@ const ClassReport = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTema, setSelectedTema] = useState(null);
+  const [downloading, setDownloading] = useState(null); // 'pdf' | 'csv' | `alumno-${id}` | null
+
+  const handleDownload = async (key, fn) => {
+    try {
+      setDownloading(key);
+      setError(null);
+      await fn();
+    } catch (err) {
+      setError('Error al generar el archivo: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setDownloading(null);
+    }
+  };
 
   const loadReport = useCallback(async () => {
     try {
@@ -71,9 +87,29 @@ const ClassReport = () => {
         <Typography variant="h5" sx={{ color: '#1976d2', fontWeight: 700 }}>
           Boletín de Clase
         </Typography>
-        <Button startIcon={<RefreshIcon />} onClick={loadReport} variant="outlined" color="primary">
-          Actualizar
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button
+            startIcon={<PictureAsPdfIcon />}
+            onClick={() => handleDownload('pdf', () => teacherService.downloadClassReportPdf())}
+            variant="outlined"
+            color="secondary"
+            disabled={downloading === 'pdf' || total_estudiantes === 0}
+          >
+            {downloading === 'pdf' ? 'Generando…' : 'PDF'}
+          </Button>
+          <Button
+            startIcon={<TableChartIcon />}
+            onClick={() => handleDownload('csv', () => teacherService.downloadClassReportCsv())}
+            variant="outlined"
+            color="secondary"
+            disabled={downloading === 'csv' || total_estudiantes === 0}
+          >
+            {downloading === 'csv' ? 'Generando…' : 'Excel/CSV'}
+          </Button>
+          <Button startIcon={<RefreshIcon />} onClick={loadReport} variant="outlined" color="primary">
+            Actualizar
+          </Button>
+        </Box>
       </Box>
 
       {error && (
@@ -163,6 +199,7 @@ const ClassReport = () => {
                   <TableCell sx={{ color: '#fff' }}>Exámenes realizados</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Último examen</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Promedio</TableCell>
+                  <TableCell sx={{ color: '#fff' }} align="center">Reporte</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -207,6 +244,22 @@ const ClassReport = () => {
                           </Typography>
                         </Box>
                       )}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Descargar reporte de este alumno (PDF)">
+                        <span>
+                          <IconButton
+                            size="small"
+                            color="secondary"
+                            disabled={downloading === `alumno-${alumno.student_id}`}
+                            onClick={() => handleDownload(`alumno-${alumno.student_id}`, () =>
+                              teacherService.downloadStudentReportPdf(alumno.student_id, `reporte-${alumno.nombre}.pdf`)
+                            )}
+                          >
+                            <PictureAsPdfIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                   );
