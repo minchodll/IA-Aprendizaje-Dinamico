@@ -345,7 +345,7 @@ function App() {
               Content = hasPermission('results') ? <ClassReport /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
             case '/exercise-bank':
-              Content = hasPermission('exercise-bank') ? <ExerciseBankUpload /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
+              Content = hasPermission('exercise-bank') ? <ExerciseBankUpload user={user} /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
     default: 
       Content = <Dashboard user={user} onLogout={handleLogout} />;

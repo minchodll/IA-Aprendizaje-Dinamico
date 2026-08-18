@@ -14,12 +14,14 @@ const nivelColor = (nivel) => {
   return 'success';
 };
 
-// Flujo: descargar plantilla -> el docente la llena en Word -> subirla aqui
-// (se previsualiza sin guardar nada) -> confirmar (recien ahi se agrega al
-// banco). Reentrenar los modelos con lo nuevo sigue siendo un paso manual
-// aparte, a proposito: un archivo mal llenado no debe poder degradar la IA
-// sin que alguien lo revise primero.
-const ExerciseBankUpload = () => {
+// Flujo, con la tarea dividida a propósito: cualquier docente descarga la
+// plantilla y la llena en Word, pero solo un administrador la sube (se
+// previsualiza sin guardar nada) y la confirma al banco compartido -- un
+// archivo mal llenado no debe poder degradar la IA de todos sin que una
+// sola persona lo revise primero. Reentrenar los modelos sigue siendo,
+// ademas, un paso manual aparte del administrador.
+const ExerciseBankUpload = ({ user }) => {
+  const esAdmin = !!user?.roles?.includes('admin');
   const [downloading, setDownloading] = useState(false);
   const [file, setFile] = useState(null);
   const [previewing, setPreviewing] = useState(false);
@@ -86,8 +88,9 @@ const ExerciseBankUpload = () => {
         Cargar Tema al Banco de Ejercicios
       </Typography>
       <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
-        Descarga la plantilla, llénala en Word con el tema y sus ejercicios, y súbela aquí.
-        Se revisa todo antes de guardar — nada se agrega al banco sin que lo confirmes.
+        {esAdmin
+          ? 'Descarga la plantilla, o revisa y confirma las que te entreguen los docentes ya llenas. Se revisa todo antes de guardar — nada se agrega al banco sin que lo confirmes.'
+          : 'Descarga la plantilla, llénala en Word con el tema y sus ejercicios, y entrégasela al administrador — es quien la sube y confirma al sistema.'}
       </Typography>
 
       {error && (
@@ -110,20 +113,29 @@ const ExerciseBankUpload = () => {
         </CardContent>
       </Card>
 
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>2. Sube la plantilla ya llena</Typography>
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-            <Button component="label" variant="outlined" startIcon={<UploadFileIcon />}>
-              {file ? file.name : 'Elegir archivo .docx'}
-              <input ref={fileInputRef} type="file" accept=".docx" hidden onChange={handleFileChange} />
-            </Button>
-            <Button variant="contained" onClick={handlePreview} disabled={!file || previewing}>
-              {previewing ? 'Leyendo…' : 'Subir y previsualizar'}
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
+      {!esAdmin && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          Cuando la tengas llena, entrégasela al administrador (por correo o como prefieran en tu institución) —
+          solo el administrador puede subirla y confirmarla al banco compartido de ejercicios.
+        </Alert>
+      )}
+
+      {esAdmin && (
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>2. Sube la plantilla ya llena</Typography>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Button component="label" variant="outlined" startIcon={<UploadFileIcon />}>
+                {file ? file.name : 'Elegir archivo .docx'}
+                <input ref={fileInputRef} type="file" accept=".docx" hidden onChange={handleFileChange} />
+              </Button>
+              <Button variant="contained" onClick={handlePreview} disabled={!file || previewing}>
+                {previewing ? 'Leyendo…' : 'Subir y previsualizar'}
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      )}
 
       {resultado && (
         <Alert severity="success" icon={<CheckCircleIcon />} sx={{ mb: 3 }}>
