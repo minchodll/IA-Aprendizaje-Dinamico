@@ -35,6 +35,7 @@ import {
   CheckCircle as CheckIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const PermissionManagement = () => {
   const [permissions, setPermissions] = useState([]);
@@ -70,7 +71,7 @@ const PermissionManagement = () => {
   const fetchPermissions = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/permissions', {
+      const response = await axios.get(`${API_ORIGIN}/api/permissions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPermissions(response.data.permissions);
@@ -84,7 +85,7 @@ const PermissionManagement = () => {
   const fetchRoles = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/roles', {
+      const response = await axios.get(`${API_ORIGIN}/api/roles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setRoles(response.data.roles);
@@ -136,11 +137,11 @@ const PermissionManagement = () => {
 
       if (editingPermission) {
         // Actualizar permiso existente
-        await axios.put(`http://localhost:8000/api/permissions/${editingPermission.id}`, dataToSend, { headers });
+        await axios.put(`${API_ORIGIN}/api/permissions/${editingPermission.id}`, dataToSend, { headers });
         setSuccess('Permiso actualizado exitosamente');
       } else {
         // Crear nuevo permiso
-        await axios.post('http://localhost:8000/api/permissions', dataToSend, { headers });
+        await axios.post(`${API_ORIGIN}/api/permissions`, dataToSend, { headers });
         setSuccess('Permiso creado exitosamente');
       }
 
@@ -160,7 +161,7 @@ const PermissionManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:8000/api/permissions/${permissionId}`, {
+      await axios.delete(`${API_ORIGIN}/api/permissions/${permissionId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setSuccess('Permiso eliminado exitosamente');

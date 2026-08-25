@@ -1,7 +1,16 @@
 import axios from 'axios';
 
-// Configuración base de axios
-const API_BASE_URL = 'http://localhost:8000/api';
+// Configuración base de axios. En desarrollo apunta a localhost; en
+// produccion se define REACT_APP_API_URL en el .env de build (Create React
+// App solo lee variables REACT_APP_* y las incrusta al momento de compilar,
+// no en tiempo de ejecucion).
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+
+// Origen sin el sufijo /api, para los componentes que todavia arman la URL
+// completa a mano con axios directo en vez de usar la instancia `api` de
+// aqui abajo (deberian migrar a `api`, pero mientras tanto esto los deja
+// funcionando tanto en local como en produccion).
+export const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 
 
 const api = axios.create({

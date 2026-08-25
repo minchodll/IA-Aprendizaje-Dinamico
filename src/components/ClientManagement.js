@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const ClientManagement = () => {
   const [clients, setClients] = useState([]);
@@ -21,7 +22,7 @@ const ClientManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/clients', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/clients`, { headers });
       setClients(response.data);
     } catch (err) {
       setError('Error al cargar clientes');
@@ -56,10 +57,10 @@ const ClientManagement = () => {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
       if (editingClient) {
-        await axios.put(`http://localhost:8000/api/clients/${editingClient.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/clients/${editingClient.id}`, formData, { headers });
         setSuccess('Cliente actualizado exitosamente');
       } else {
-        await axios.post('http://localhost:8000/api/clients', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/clients`, formData, { headers });
         setSuccess('Cliente creado exitosamente');
       }
       handleCloseDialog();
@@ -74,7 +75,7 @@ const ClientManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      await axios.delete(`http://localhost:8000/api/clients/${id}`, { headers });
+      await axios.delete(`${API_ORIGIN}/api/clients/${id}`, { headers });
       setSuccess('Cliente eliminado exitosamente');
       fetchClients();
     } catch (err) {

@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const CategoryManagement = () => {
   const [categories, setCategories] = useState([]);
@@ -21,7 +22,7 @@ const CategoryManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/categories', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/categories`, { headers });
       setCategories(response.data);
     } catch (err) {
       setError('Error al cargar categorías');
@@ -56,10 +57,10 @@ const CategoryManagement = () => {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
       if (editingCategory) {
-        await axios.put(`http://localhost:8000/api/categories/${editingCategory.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/categories/${editingCategory.id}`, formData, { headers });
         setSuccess('Categoría actualizada exitosamente');
       } else {
-        await axios.post('http://localhost:8000/api/categories', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/categories`, formData, { headers });
         setSuccess('Categoría creada exitosamente');
       }
       handleCloseDialog();
@@ -74,7 +75,7 @@ const CategoryManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      await axios.delete(`http://localhost:8000/api/categories/${id}`, { headers });
+      await axios.delete(`${API_ORIGIN}/api/categories/${id}`, { headers });
       setSuccess('Categoría eliminada exitosamente');
       fetchCategories();
     } catch (err) {

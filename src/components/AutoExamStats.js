@@ -9,6 +9,7 @@ import TopicIcon from '@mui/icons-material/Topic';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const AutoExamStats = () => {
   const [stats, setStats] = useState({
@@ -49,14 +50,14 @@ const AutoExamStats = () => {
       }
 
       try {
-        const topicsResponse = await axios.get('http://localhost:8000/api/topics', { headers });
+        const topicsResponse = await axios.get(`${API_ORIGIN}/api/topics`, { headers });
         topics = topicsResponse.data?.data || [];
       } catch (err) {
         console.warn('Error loading topics:', err);
       }
 
       try {
-        const examsResponse = await axios.get('http://localhost:8000/api/exams', { headers });
+        const examsResponse = await axios.get(`${API_ORIGIN}/api/exams`, { headers });
         exams = examsResponse.data?.data || [];
       } catch (err) {
         console.warn('Error loading exams:', err);

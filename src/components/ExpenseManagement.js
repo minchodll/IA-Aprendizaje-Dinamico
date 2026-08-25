@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const ExpenseManagement = () => {
   const [expenses, setExpenses] = useState([]);
@@ -23,7 +24,7 @@ const ExpenseManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/expenses', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/expenses`, { headers });
       setExpenses(response.data);
     } catch (err) {
       setError('Error al cargar egresos');
@@ -36,7 +37,7 @@ const ExpenseManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/suppliers', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/suppliers`, { headers });
       setSuppliers(response.data);
     } catch (err) {}
   };
@@ -45,7 +46,7 @@ const ExpenseManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/categories', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/categories`, { headers });
       setCategories(response.data);
     } catch (err) {}
   };
@@ -76,10 +77,10 @@ const ExpenseManagement = () => {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
       if (editingExpense) {
-        await axios.put(`http://localhost:8000/api/expenses/${editingExpense.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/expenses/${editingExpense.id}`, formData, { headers });
         setSuccess('Egreso actualizado exitosamente');
       } else {
-        await axios.post('http://localhost:8000/api/expenses', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/expenses`, formData, { headers });
         setSuccess('Egreso creado exitosamente');
       }
       handleCloseDialog();
@@ -94,7 +95,7 @@ const ExpenseManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      await axios.delete(`http://localhost:8000/api/expenses/${id}`, { headers });
+      await axios.delete(`${API_ORIGIN}/api/expenses/${id}`, { headers });
       setSuccess('Egreso eliminado exitosamente');
       fetchExpenses();
     } catch (err) {

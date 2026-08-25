@@ -38,6 +38,7 @@ import {
   Group as GroupIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const RoleManagement = () => {
   const [roles, setRoles] = useState([]);
@@ -62,7 +63,7 @@ const RoleManagement = () => {
   const fetchRoles = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/roles', {
+      const response = await axios.get(`${API_ORIGIN}/api/roles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setRoles(response.data.roles);
@@ -76,7 +77,7 @@ const RoleManagement = () => {
   const fetchPermissions = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/permissions', {
+      const response = await axios.get(`${API_ORIGIN}/api/permissions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPermissions(response.data.permissions);
@@ -123,11 +124,11 @@ const RoleManagement = () => {
 
       if (editingRole) {
         // Actualizar rol existente
-        await axios.put(`http://localhost:8000/api/roles/${editingRole.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/roles/${editingRole.id}`, formData, { headers });
         setSuccess('Rol actualizado exitosamente');
       } else {
         // Crear nuevo rol
-        await axios.post('http://localhost:8000/api/roles', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/roles`, formData, { headers });
         setSuccess('Rol creado exitosamente');
       }
 
@@ -147,7 +148,7 @@ const RoleManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:8000/api/roles/${roleId}`, {
+      await axios.delete(`${API_ORIGIN}/api/roles/${roleId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setSuccess('Rol eliminado exitosamente');

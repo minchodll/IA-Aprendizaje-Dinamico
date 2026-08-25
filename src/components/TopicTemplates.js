@@ -10,6 +10,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import BusinessIcon from '@mui/icons-material/Business';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const TopicTemplates = () => {
   const [templates, setTemplates] = useState([]);
@@ -30,7 +31,7 @@ const TopicTemplates = () => {
       const token = localStorage.getItem('auth_token') || localStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       
-      const response = await axios.get('http://localhost:8000/api/topic-templates', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/topic-templates`, { headers });
       setTemplates(response.data?.data || []);
     } catch (err) {
       console.error('Error loading templates:', err);

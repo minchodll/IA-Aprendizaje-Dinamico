@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, Login as LoginIcon } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const Login = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ const Login = ({ onLoginSuccess }) => {
     setSuccess('');
 
     try {
-     const response = await axios.post('http://localhost:8000/api/login', formData);
+     const response = await axios.post(`${API_ORIGIN}/api/login`, formData);
       
       if (response.data.status) {
         setSuccess('Login exitoso!');

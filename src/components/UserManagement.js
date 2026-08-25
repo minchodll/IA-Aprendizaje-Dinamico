@@ -35,6 +35,7 @@ import {
   Security as SecurityIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -62,7 +63,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/users', {
+      const response = await axios.get(`${API_ORIGIN}/api/users`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setUsers(response.data.users);
@@ -76,7 +77,7 @@ const UserManagement = () => {
   const fetchRoles = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/roles', {
+      const response = await axios.get(`${API_ORIGIN}/api/roles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setRoles(response.data.roles);
@@ -132,11 +133,11 @@ const UserManagement = () => {
 
       if (editingUser) {
         // Actualizar usuario existente
-        await axios.put(`http://localhost:8000/api/users/${editingUser.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/users/${editingUser.id}`, formData, { headers });
         setSuccess('Usuario actualizado exitosamente');
       } else {
         // Crear nuevo usuario
-        await axios.post('http://localhost:8000/api/register', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/register`, formData, { headers });
         setSuccess('Usuario creado exitosamente');
       }
 
@@ -156,7 +157,7 @@ const UserManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:8000/api/users/${userId}`, {
+      await axios.delete(`${API_ORIGIN}/api/users/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setSuccess('Usuario eliminado exitosamente');
@@ -169,7 +170,7 @@ const UserManagement = () => {
   const handleAssignRole = async (userId, role) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:8000/api/roles/assign', {
+      await axios.post(`${API_ORIGIN}/api/roles/assign`, {
         user_id: userId,
         role: role
       }, {

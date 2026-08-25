@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const IncomeManagement = () => {
   const [incomes, setIncomes] = useState([]);
@@ -23,7 +24,7 @@ const IncomeManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/incomes', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/incomes`, { headers });
       setIncomes(response.data);
     } catch (err) {
       setError('Error al cargar ingresos');
@@ -36,7 +37,7 @@ const IncomeManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/clients', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/clients`, { headers });
       setClients(response.data);
     } catch (err) {}
   };
@@ -45,7 +46,7 @@ const IncomeManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/categories', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/categories`, { headers });
       setCategories(response.data);
     } catch (err) {}
   };
@@ -76,10 +77,10 @@ const IncomeManagement = () => {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
       if (editingIncome) {
-        await axios.put(`http://localhost:8000/api/incomes/${editingIncome.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/incomes/${editingIncome.id}`, formData, { headers });
         setSuccess('Ingreso actualizado exitosamente');
       } else {
-        await axios.post('http://localhost:8000/api/incomes', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/incomes`, formData, { headers });
         setSuccess('Ingreso creado exitosamente');
       }
       handleCloseDialog();
@@ -94,7 +95,7 @@ const IncomeManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      await axios.delete(`http://localhost:8000/api/incomes/${id}`, { headers });
+      await axios.delete(`${API_ORIGIN}/api/incomes/${id}`, { headers });
       setSuccess('Ingreso eliminado exitosamente');
       fetchIncomes();
     } catch (err) {

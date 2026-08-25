@@ -36,7 +36,7 @@ import {
 import AdminPanel from './AdminPanel';
 import BasicStats from './BasicStats';
 import axios from 'axios';
-import { authService } from '../services/api';
+import { authService, API_ORIGIN } from '../services/api';
 
 const Dashboard = ({ user, onLogout }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -55,7 +55,7 @@ const Dashboard = ({ user, onLogout }) => {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('auth_token');
-      const response = await axios.get('http://localhost:8000/api/dashboard', {
+      const response = await axios.get(`${API_ORIGIN}/api/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -79,7 +79,7 @@ const Dashboard = ({ user, onLogout }) => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('auth_token');
-      await axios.post('http://localhost:8000/api/logout', {}, {
+      await axios.post(`${API_ORIGIN}/api/logout`, {}, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

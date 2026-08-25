@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 
 const SupplierManagement = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -21,7 +22,7 @@ const SupplierManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:8000/api/suppliers', { headers });
+      const response = await axios.get(`${API_ORIGIN}/api/suppliers`, { headers });
       setSuppliers(response.data);
     } catch (err) {
       setError('Error al cargar proveedores');
@@ -56,10 +57,10 @@ const SupplierManagement = () => {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
       if (editingSupplier) {
-        await axios.put(`http://localhost:8000/api/suppliers/${editingSupplier.id}`, formData, { headers });
+        await axios.put(`${API_ORIGIN}/api/suppliers/${editingSupplier.id}`, formData, { headers });
         setSuccess('Proveedor actualizado exitosamente');
       } else {
-        await axios.post('http://localhost:8000/api/suppliers', formData, { headers });
+        await axios.post(`${API_ORIGIN}/api/suppliers`, formData, { headers });
         setSuccess('Proveedor creado exitosamente');
       }
       handleCloseDialog();
@@ -74,7 +75,7 @@ const SupplierManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      await axios.delete(`http://localhost:8000/api/suppliers/${id}`, { headers });
+      await axios.delete(`${API_ORIGIN}/api/suppliers/${id}`, { headers });
       setSuccess('Proveedor eliminado exitosamente');
       fetchSuppliers();
     } catch (err) {
