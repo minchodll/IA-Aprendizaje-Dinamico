@@ -1,0 +1,22 @@
+# Servicio systemd para el microservicio de IA (Python/FastAPI/TensorFlow).
+# Instalar en el VPS: sudo cp deploy/ai-service.service /etc/systemd/system/
+# Luego: sudo systemctl daemon-reload && sudo systemctl enable --now ai-service
+#
+# Ajustar WorkingDirectory/ExecStart si el proyecto no queda en /var/www.
+# Solo escucha en 127.0.0.1 -- nunca se expone directo a internet, solo el
+# backend Node (en el mismo servidor) le habla por localhost.
+
+[Unit]
+Description=Microservicio de IA (TensorFlow) - Generacion y Evaluacion de Ejercicios
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/sistema-backend-ia/ai-service
+ExecStart=/var/www/sistema-backend-ia/ai-service/venv/bin/uvicorn app:app --host 127.0.0.1 --port 8500
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
