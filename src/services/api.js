@@ -279,7 +279,15 @@ export const authService = {
 
       // Actualizar datos del usuario
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      
+
+      // El backend reemite un token con la expiracion completa de nuevo
+      // (la sesion original dura poco a proposito) -- guardarlo mantiene
+      // al usuario activo con sesion, sin tener que volver a iniciar sesion.
+      if (response.data.token) {
+        localStorage.setItem('auth_token', response.data.token);
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      }
+
       return response.data;
     } catch (error) {
       console.error('Error en refreshPermissions:', error);

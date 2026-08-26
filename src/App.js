@@ -200,6 +200,22 @@ function App() {
     initializeApp();
   }, []);
 
+  // Renovacion de sesion en silencio: el token dura poco a proposito
+  // (JWT_EXPIRES_IN, hoy 2h) para que una laptop perdida con sesion abierta
+  // no quede utilizable por dias. Mientras la pestaña siga abierta y el
+  // usuario siga activo, se renueva solo cada 20 minutos -- muy por debajo
+  // de las 2h, así que nunca se nota. Si el usuario cierra la pestaña o
+  // deja de usarla, la renovacion deja de correr y la sesion expira sola.
+  useEffect(() => {
+    if (!user) return undefined;
+    const intervalId = setInterval(() => {
+      authService.refreshPermissions().catch((err) => {
+        console.warn('No se pudo renovar la sesión (se reintentará en el próximo ciclo):', err.message);
+      });
+    }, 20 * 60 * 1000);
+    return () => clearInterval(intervalId);
+  }, [user]);
+
   const handleLoginSuccess = async (loginData) => {
     if (!loginData?.token || !loginData?.user) {
       console.error('Datos de login inválidos');
