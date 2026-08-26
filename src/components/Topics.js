@@ -20,6 +20,7 @@ const Topics = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [warning, setWarning] = useState(null);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ 
@@ -148,7 +149,8 @@ const Topics = () => {
 
     try {
       setError(null);
-      
+      setWarning(null);
+
       if (editing) {
         await topicService.update(editing.id, form);
         await loadData();
@@ -156,8 +158,16 @@ const Topics = () => {
       } else {
         const response = await topicService.create(form);
 
-        // Si se generó un examen automáticamente, mostrarlo
-        if (response.generated_exam) {
+        if (response.exam_error) {
+          // El tema sí se guardó -- solo la generación automática del examen
+          // falló (normalmente porque el microservicio de IA no responde).
+          setWarning(`El tema se guardó, pero no se pudo generar el examen automáticamente: ${response.exam_error}`);
+          await loadData();
+          handleClose();
+        } else if (response.generated_exam) {
+          if (response.generated_exam.advertencia) {
+            setWarning(response.generated_exam.advertencia);
+          }
           setGeneratedExam(response.generated_exam);
           setShowExamDetails(true);
         } else {
@@ -185,7 +195,11 @@ const Topics = () => {
   const handleGenerateExam = async (topicId) => {
     try {
       setError(null);
+      setWarning(null);
       const response = await topicService.generateExam(topicId);
+      if (response.data?.advertencia) {
+        setWarning(response.data.advertencia);
+      }
       setGeneratedExam(response.data);
       setShowExamDetails(true);
     } catch (err) {
@@ -269,6 +283,11 @@ const Topics = () => {
       {error && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}
+        </Alert>
+      )}
+      {warning && (
+        <Alert severity="warning" sx={{ mb: 2 }} onClose={() => setWarning(null)}>
+          {warning}
         </Alert>
       )}
 
