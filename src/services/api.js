@@ -25,7 +25,7 @@ const api = axios.create({
 
 // Función para verificar si una ruta es pública
 const isPublicRoute = (url) => {
-  const publicRoutes = ['/login', '/register'];
+  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
   return publicRoutes.some(route => url.includes(route));
 };
 
@@ -300,6 +300,18 @@ export const authService = {
       }
       throw error;
     }
+  },
+
+  // Pre-login: no llevan token. La respuesta es intencionalmente genérica
+  // (no dice si el correo existe o no) -- ver comentario en el backend.
+  forgotPassword: async (email) => {
+    const response = await api.post('/forgot-password', { email });
+    return response.data;
+  },
+
+  resetPassword: async (token, newPassword) => {
+    const response = await api.post('/reset-password', { token, newPassword });
+    return response.data;
   }
 };
 

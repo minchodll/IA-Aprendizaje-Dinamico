@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box, Toolbar } from '@mui/material';
 import Login from './components/Login';
+import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
 import Results from './components/Results';
@@ -173,6 +174,14 @@ function App() {
   // botones "Regresar" de la pantalla 404 y del error boundary.
   const previousRouteRef = useRef('/dashboard');
 
+  // El enlace del correo de recuperación abre la app en la raíz con
+  // ?reset_token=... (esta SPA no tiene rutas propias). Se lee una sola vez
+  // al montar; si está presente, se muestra ResetPassword sin importar si
+  // hay sesión activa o no.
+  const [resetToken, setResetToken] = useState(
+    () => new URLSearchParams(window.location.search).get('reset_token')
+  );
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -333,6 +342,23 @@ function App() {
     
     return hasAccess;
   };
+
+  if (resetToken) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ResetPassword
+          token={resetToken}
+          onDone={() => {
+            // Limpia el token de la URL para que no quede reusable por
+            // accidente (recargar, historial del navegador, etc.).
+            window.history.replaceState({}, '', window.location.pathname);
+            setResetToken(null);
+          }}
+        />
+      </ThemeProvider>
+    );
+  }
 
   if (loading) {
     return (

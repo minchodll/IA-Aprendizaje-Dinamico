@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, Login as LoginIcon } from '@mui/icons-material';
 import axios from 'axios';
-import { API_ORIGIN } from '../services/api';
+import { API_ORIGIN, authService } from '../services/api';
 
 const Login = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({
@@ -24,6 +24,29 @@ const Login = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Mini-flujo de "olvidé mi contraseña" dentro de la misma pantalla, sin
+  // necesitar una ruta aparte (esta app no usa react-router).
+  const [mode, setMode] = useState('login'); // 'login' | 'forgot'
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotMessage, setForgotMessage] = useState('');
+  const [forgotError, setForgotError] = useState('');
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    setForgotError('');
+    setForgotMessage('');
+    try {
+      setForgotLoading(true);
+      const result = await authService.forgotPassword(forgotEmail);
+      setForgotMessage(result.message || 'Si el correo está registrado, te enviamos un enlace.');
+    } catch (err) {
+      setForgotError(err.response?.data?.message || 'No se pudo enviar la solicitud. Intenta de nuevo.');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -91,15 +114,59 @@ const Login = ({ onLoginSuccess }) => {
           }}
         >
           <LoginIcon sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
-          
+
           <Typography component="h1" variant="h4" gutterBottom>
-            Iniciar Sesión
-          </Typography>
-          
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Sistema de Administración con Roles y Permisos
+            {mode === 'login' ? 'Iniciar Sesión' : 'Recuperar contraseña'}
           </Typography>
 
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
+            {mode === 'login'
+              ? 'Sistema de Administración con Roles y Permisos'
+              : 'Escribe tu correo y te enviamos un enlace para elegir una nueva contraseña.'}
+          </Typography>
+
+          {mode === 'forgot' ? (
+            <Box component="form" onSubmit={handleForgotSubmit} sx={{ width: '100%' }}>
+              {forgotError && (
+                <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+                  {forgotError}
+                </Alert>
+              )}
+              {forgotMessage && (
+                <Alert severity="success" sx={{ width: '100%', mb: 2 }}>
+                  {forgotMessage}
+                </Alert>
+              )}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Correo Electrónico"
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                disabled={forgotLoading}
+                autoFocus
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 1, py: 1.5 }}
+                disabled={forgotLoading}
+              >
+                {forgotLoading ? <CircularProgress size={24} color="inherit" /> : 'Enviar enlace'}
+              </Button>
+              <Button
+                fullWidth
+                onClick={() => { setMode('login'); setForgotError(''); setForgotMessage(''); }}
+                disabled={forgotLoading}
+              >
+                Volver a iniciar sesión
+              </Button>
+            </Box>
+          ) : (
+          <>
           {error && (
             <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
               {error}
@@ -167,6 +234,14 @@ const Login = ({ onLoginSuccess }) => {
                 'Iniciar Sesión'
               )}
             </Button>
+            <Button
+              fullWidth
+              size="small"
+              onClick={() => { setMode('forgot'); setError(''); setSuccess(''); }}
+              disabled={loading}
+            >
+              ¿Olvidaste tu contraseña?
+            </Button>
           </Box>
 
           <Box sx={{ mt: 2, textAlign: 'center' }}>
@@ -183,6 +258,8 @@ const Login = ({ onLoginSuccess }) => {
               User: user@example.com / password123
             </Typography>
           </Box>
+          </>
+          )}
         </Paper>
       </Box>
     </Container>
