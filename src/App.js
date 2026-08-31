@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box, Toolbar } from '@mui/material';
 import Login from './components/Login';
@@ -21,11 +21,35 @@ import TakeExam from './components/TakeExam';
 import MyCourses from './components/MyCourses';
 import MyGrades from './components/MyGrades';
 import MyProgress from './components/MyProgress';
+import MyRecommendations from './components/MyRecommendations';
 import ClassReport from './components/ClassReport';
 import ExerciseBankUpload from './components/ExerciseBankUpload';
 import FAQ from './components/FAQ';
 import AccessDenied from './components/AccessDenied';
+import NotFound from './components/NotFound';
+import ScreenErrorBoundary from './components/ScreenErrorBoundary';
 import { authService, api } from './services/api';
+
+// Todas las rutas internas reales de la app (deben coincidir con los
+// "case" del switch de abajo). Si `route` no está en esta lista, se
+// muestra la pantalla 404 en vez de caer silenciosamente en otra cosa.
+const VALID_ROUTES = [
+  '/dashboard', '/students', '/teachers', '/grades', '/sections', '/subjects',
+  '/topics', '/topic-templates', '/exams', '/questions', '/results',
+  '/assignments', '/recommendations', '/exam-assignments', '/take-exam',
+  '/my-courses', '/my-grades', '/my-progress', '/my-recommendations', '/class-report',
+  '/exercise-bank', '/faq'
+];
+const LAST_ROUTE_KEY = 'last_route';
+
+function getStoredRoute() {
+  try {
+    const stored = localStorage.getItem(LAST_ROUTE_KEY);
+    return stored && VALID_ROUTES.includes(stored) ? stored : '/dashboard';
+  } catch {
+    return '/dashboard';
+  }
+}
 
 // Tema verde moderno
 const theme = createTheme({
@@ -141,7 +165,13 @@ const modulePermissions = {
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [route, setRoute] = useState('/dashboard');
+  // Arranca en la última pantalla guardada: si el usuario recarga la
+  // página (o falló una carga y refrescó), vuelve adonde estaba en vez
+  // de mandarlo siempre al dashboard.
+  const [route, setRoute] = useState(getStoredRoute);
+  // Última ruta VÁLIDA distinta de la actual -- a donde regresan los
+  // botones "Regresar" de la pantalla 404 y del error boundary.
+  const previousRouteRef = useRef('/dashboard');
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -257,7 +287,25 @@ function App() {
   };
 
   const handleNavigate = (path) => {
-    setRoute(path);
+    setRoute((prevRoute) => {
+      if (prevRoute !== path && VALID_ROUTES.includes(prevRoute)) {
+        previousRouteRef.current = prevRoute;
+      }
+      return path;
+    });
+    try {
+      localStorage.setItem(LAST_ROUTE_KEY, path);
+    } catch {
+      // localStorage puede fallar (modo privado, cuota llena); no es crítico
+    }
+  };
+
+  // A donde manda el botón "Regresar" de la 404 y del error boundary:
+  // la última pantalla válida distinta de la actual, o el dashboard si
+  // no hay ninguna (ej. primera carga con una ruta guardada rota).
+  const goToPreviousRoute = () => {
+    const target = previousRouteRef.current !== route ? previousRouteRef.current : '/dashboard';
+    handleNavigate(target);
   };
 
   // Función para verificar si el usuario tiene acceso a un módulo
@@ -307,15 +355,18 @@ function App() {
   }
 
   let Content;
+  if (!VALID_ROUTES.includes(route)) {
+    Content = <NotFound onGoBack={goToPreviousRoute} />;
+  } else
   switch (route) {
-    case '/students': 
+    case '/students':
       Content = hasPermission('students') ? <Students /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
       break;
     case '/teachers': 
       Content = hasPermission('teachers') ? <Teachers /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
       break;
-    case '/grades': 
-      Content = hasPermission('grades') ? <Grades /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
+    case '/grades':
+      Content = hasPermission('grades') ? <Grades /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
       break;
     case '/sections': 
       Content = hasPermission('sections') ? <Sections /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />; 
@@ -359,6 +410,9 @@ function App() {
             case '/my-progress':
               Content = hasPermission('take-exam') ? <MyProgress /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
+            case '/my-recommendations':
+              Content = hasPermission('take-exam') ? <MyRecommendations /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
+              break;
             case '/class-report':
               Content = hasPermission('results') ? <ClassReport /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
@@ -379,7 +433,9 @@ function App() {
         <Sidebar onNavigate={handleNavigate} user={user} hasPermission={hasPermission} />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Toolbar />
-          {Content}
+          <ScreenErrorBoundary routeKey={route} onGoBack={goToPreviousRoute}>
+            {Content}
+          </ScreenErrorBoundary>
         </Box>
       </Box>
     </ThemeProvider>

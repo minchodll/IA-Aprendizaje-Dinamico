@@ -414,6 +414,23 @@ export const studentService = {
   getMyGrades: async () => {
     const response = await api.get('/student/my-grades');
     return response.data.data;
+  },
+
+  getMyRecommendations: async () => {
+    const response = await api.get('/student/my-recommendations');
+    return response.data.data;
+  },
+
+  // La IA genera/actualiza recomendaciones a partir de los temas donde el
+  // alumno realmente falla; devuelve las que quedaron activas tras la corrida.
+  generateRecommendations: async () => {
+    const response = await api.post('/student/generate-recommendations');
+    return response.data;
+  },
+
+  completeRecommendation: async (id) => {
+    const response = await api.patch(`/student/my-recommendations/${id}/completar`);
+    return response.data;
   }
 };
 

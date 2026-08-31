@@ -5,14 +5,10 @@ import SchoolIcon from '@mui/icons-material/School';
 import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import QuizIcon from '@mui/icons-material/Quiz';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import GradeIcon from '@mui/icons-material/Grade';
 import ClassIcon from '@mui/icons-material/Class';
 import BookIcon from '@mui/icons-material/Book';
 import TopicIcon from '@mui/icons-material/Topic';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PersonIcon from '@mui/icons-material/Person';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -22,6 +18,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupsIcon from '@mui/icons-material/Groups';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', permission: 'dashboard' },
@@ -31,11 +28,8 @@ const menuItems = [
   { text: 'Secciones', icon: <ClassIcon />, path: '/sections', permission: 'sections' },
   { text: 'Materias', icon: <BookIcon />, path: '/subjects', permission: 'subjects' },
   { text: 'Temas', icon: <TopicIcon />, path: '/topics', permission: 'topics' },
-  { text: 'Plantillas de Temas', icon: <AutoAwesomeIcon />, path: '/topic-templates', permission: 'topic-templates' },
   { text: 'Cargar Banco de Ejercicios', icon: <UploadFileIcon />, path: '/exercise-bank', permission: 'exercise-bank' },
   { text: 'Exámenes', icon: <QuizIcon />, path: '/exams', permission: 'exams' },
-  { text: 'Preguntas', icon: <QuestionAnswerIcon />, path: '/questions', permission: 'questions' },
-  { text: 'Resultados', icon: <EmojiEventsIcon />, path: '/results', permission: 'results' },
   { text: 'Boletín de Clase', icon: <GroupsIcon />, path: '/class-report', permission: 'results' },
   { text: 'Asignaciones', icon: <AssignmentIcon />, path: '/assignments', permission: 'assignments' },
   { text: 'Asignar Exámenes', icon: <AssignmentTurnedInIcon />, path: '/exam-assignments', permission: 'exam-assignments' },
@@ -43,7 +37,7 @@ const menuItems = [
   { text: 'Resolver Examen', icon: <PlayArrowIcon />, path: '/take-exam', permission: 'take-exam' },
   { text: 'Mis Notas', icon: <AssessmentIcon />, path: '/my-grades', permission: 'take-exam' },
   { text: 'Mi Progreso', icon: <TrendingUpIcon />, path: '/my-progress', permission: 'take-exam' },
-  { text: 'Recomendaciones', icon: <LightbulbIcon />, path: '/recommendations', permission: 'recommendations' },
+  { text: 'Mis Recomendaciones', icon: <LightbulbIcon />, path: '/my-recommendations', permission: 'take-exam' },
   { text: 'Preguntas Frecuentes', icon: <HelpOutlineIcon />, path: '/faq', permission: 'faq' },
 ];
 
@@ -71,10 +65,10 @@ const Sidebar = ({ onNavigate, user, hasPermission }) => {
       ['grades', 'sections', 'subjects'].includes(item.permission)
     ),
     contenido: filteredMenuItems.filter(item =>
-      ['topics', 'topic-templates', 'exams', 'questions', 'exercise-bank'].includes(item.permission)
+      ['topics', 'exams', 'exercise-bank'].includes(item.permission)
     ),
     evaluacion: filteredMenuItems.filter(item =>
-      ['results', 'assignments', 'exam-assignments', 'take-exam', 'recommendations'].includes(item.permission)
+      ['results', 'assignments', 'exam-assignments', 'take-exam'].includes(item.permission)
     ),
     ayuda: filteredMenuItems.filter(item =>
       ['faq'].includes(item.permission)

@@ -10,16 +10,23 @@ Contrato con el backend Node.js:
         body: {"ejercicio_id": "excel-3", "respuesta_alumno": "..."}
         -> {"ejercicio_id", "tipo", "correcto", "similitud" (solo respuesta_corta), "retroalimentacion"}
 
+    POST /recomendacion
+        body: {"categoria": "excel", "nivel": "intermedio" (opcional),
+               "veces_fallada": 3, "excluir_ids": ["excel-3"] (opcional)}
+        -> {"titulo", "descripcion", "contenido", "tipo", "prioridad", "ejercicios": [...]}
+
 La clasificacion de categoria/dificultad a partir del texto libre del tema la
 hace TensorFlow (classifier.py); la seleccion de ejercicios en si viene del
 banco semilla (generator.py + bank_loader.py). La evaluacion de respuesta
 corta usa un embedder de TensorFlow entrenado sobre el banco (evaluator.py).
+Las recomendaciones de refuerzo (recommender.py) reusan esa misma seleccion
+del banco, dirigida a la categoria/nivel donde el alumno realmente falla.
 
 Correr con:
     uvicorn app:app --reload --port 8500
 """
 
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import Response
@@ -29,6 +36,7 @@ import bank_editor
 import classifier
 import evaluator
 import generator
+import recommender
 
 app = FastAPI(title="Microservicio IA - Generacion y Evaluacion de Ejercicios")
 
@@ -46,6 +54,13 @@ class EvaluarRequest(BaseModel):
 
 class ConfirmarTemaRequest(BaseModel):
     tema: dict
+
+
+class RecomendacionRequest(BaseModel):
+    categoria: str
+    nivel: Optional[str] = None
+    veces_fallada: int = 1
+    excluir_ids: Optional[List[str]] = None
 
 
 @app.get("/health")
@@ -71,6 +86,15 @@ def generar_ejercicio(req: GenerarRequest):
 @app.post("/evaluar-respuesta")
 def evaluar_respuesta(req: EvaluarRequest):
     return evaluator.evaluar_respuesta(req.ejercicio_id, req.respuesta_alumno)
+
+
+# ---- Recomendaciones de refuerzo (ver recommender.py) ----
+
+@app.post("/recomendacion")
+def recomendacion(req: RecomendacionRequest):
+    return recommender.generar_recomendacion(
+        req.categoria, req.nivel, req.veces_fallada, req.excluir_ids
+    )
 
 
 # ---- Plantilla para que un docente proponga un tema/ejercicios nuevos ----
