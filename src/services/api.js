@@ -525,6 +525,16 @@ export const teacherService = {
   downloadStudentReportPdf: async (studentId, nombreArchivo) => {
     const response = await api.get(`/teacher/student-report/${studentId}/pdf`, { responseType: 'blob' });
     downloadBlob(response.data, nombreArchivo || `reporte-alumno-${studentId}.pdf`);
+  },
+
+  getStudentExamResults: async (studentId) => {
+    const response = await api.get(`/teacher/students/${studentId}/exam-results`);
+    return response.data.data;
+  },
+
+  ajustarCalificacion: async (examResultId, puntajeObtenido) => {
+    const response = await api.patch(`/teacher/exam-results/${examResultId}/ajustar`, { puntaje_obtenido: puntajeObtenido });
+    return response.data;
   }
 };
 

@@ -3,7 +3,7 @@ import {
   Box, Typography, Card, CardContent, CardActionArea, Grid, Chip, CircularProgress, Alert, Button,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, LinearProgress, Avatar,
   Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemAvatar, ListItemText, Divider,
-  IconButton, Tooltip
+  IconButton, Tooltip, TextField
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -12,6 +12,10 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import { teacherService } from '../services/api';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -39,6 +43,61 @@ const ClassReport = () => {
   const [error, setError] = useState(null);
   const [selectedTema, setSelectedTema] = useState(null);
   const [downloading, setDownloading] = useState(null); // 'pdf' | 'csv' | `alumno-${id}` | null
+
+  // Ajuste manual de calificaciones (RF8): al abrir el examen de un alumno
+  // se cargan sus intentos individuales; cada uno se puede editar en línea.
+  const [selectedAlumno, setSelectedAlumno] = useState(null);
+  const [examResults, setExamResults] = useState([]);
+  const [loadingExamResults, setLoadingExamResults] = useState(false);
+  const [examResultsError, setExamResultsError] = useState(null);
+  const [editingResultId, setEditingResultId] = useState(null);
+  const [editValue, setEditValue] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  const abrirExamenesAlumno = async (alumno) => {
+    setSelectedAlumno(alumno);
+    setExamResultsError(null);
+    setLoadingExamResults(true);
+    try {
+      const data = await teacherService.getStudentExamResults(alumno.student_id);
+      setExamResults(data || []);
+    } catch (err) {
+      setExamResultsError('Error al cargar los exámenes: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setLoadingExamResults(false);
+    }
+  };
+
+  const cerrarExamenesAlumno = () => {
+    setSelectedAlumno(null);
+    setExamResults([]);
+    setEditingResultId(null);
+  };
+
+  const empezarEdicion = (resultado) => {
+    setEditingResultId(resultado.id);
+    setEditValue(String(resultado.puntaje_obtenido));
+  };
+
+  const guardarEdicion = async (resultado) => {
+    const nuevoPuntaje = Number(editValue);
+    if (Number.isNaN(nuevoPuntaje)) {
+      setExamResultsError('La calificación debe ser un número');
+      return;
+    }
+    setSavingEdit(true);
+    setExamResultsError(null);
+    try {
+      await teacherService.ajustarCalificacion(resultado.id, nuevoPuntaje);
+      setExamResults((prev) => prev.map((r) => (r.id === resultado.id ? { ...r, puntaje_obtenido: nuevoPuntaje } : r)));
+      setEditingResultId(null);
+      loadReport(); // el promedio del alumno/clase puede haber cambiado
+    } catch (err) {
+      setExamResultsError('No se pudo guardar: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   const handleDownload = async (key, fn) => {
     try {
@@ -199,6 +258,7 @@ const ClassReport = () => {
                   <TableCell sx={{ color: '#fff' }}>Exámenes realizados</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Último examen</TableCell>
                   <TableCell sx={{ color: '#fff' }}>Promedio</TableCell>
+                  <TableCell sx={{ color: '#fff' }} align="center">Exámenes</TableCell>
                   <TableCell sx={{ color: '#fff' }} align="center">Reporte</TableCell>
                 </TableRow>
               </TableHead>
@@ -244,6 +304,20 @@ const ClassReport = () => {
                           </Typography>
                         </Box>
                       )}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Ver exámenes y ajustar calificaciones">
+                        <span>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            disabled={alumno.examenes_realizados === 0}
+                            onClick={() => abrirExamenesAlumno(alumno)}
+                          >
+                            <AssignmentIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Descargar reporte de este alumno (PDF)">
@@ -349,6 +423,90 @@ const ClassReport = () => {
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setSelectedTema(null)}>Cerrar</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
+
+      <Dialog open={!!selectedAlumno} onClose={cerrarExamenesAlumno} maxWidth="sm" fullWidth>
+        {selectedAlumno && (
+          <>
+            <DialogTitle>
+              Exámenes de {selectedAlumno.nombre}
+              <Typography variant="body2" color="textSecondary">
+                Ajusta una calificación si detectas una discrepancia con el criterio de la IA.
+              </Typography>
+            </DialogTitle>
+            <DialogContent dividers>
+              {examResultsError && (
+                <Alert severity="error" sx={{ mb: 2 }} onClose={() => setExamResultsError(null)}>
+                  {examResultsError}
+                </Alert>
+              )}
+              {loadingExamResults ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+                  <CircularProgress size={28} />
+                </Box>
+              ) : examResults.length === 0 ? (
+                <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 2 }}>
+                  Este alumno todavía no tiene exámenes realizados.
+                </Typography>
+              ) : (
+                <List disablePadding>
+                  {examResults.map((r, idx) => {
+                    const porcentaje = Number(r.puntaje_total) > 0
+                      ? Math.round((Number(r.puntaje_obtenido) / Number(r.puntaje_total)) * 100)
+                      : 0;
+                    const editando = editingResultId === r.id;
+                    return (
+                      <React.Fragment key={r.id}>
+                        <ListItem disableGutters>
+                          <ListItemText
+                            primary={r.examen}
+                            secondary={new Date(r.fecha_realizacion).toLocaleDateString()}
+                          />
+                          {editando ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <TextField
+                                size="small"
+                                type="number"
+                                value={editValue}
+                                onChange={(e) => setEditValue(e.target.value)}
+                                sx={{ width: 90 }}
+                                inputProps={{ min: 0, max: r.puntaje_total, step: 0.01 }}
+                                disabled={savingEdit}
+                                autoFocus
+                              />
+                              <Typography variant="body2" color="textSecondary">/ {r.puntaje_total}</Typography>
+                              <IconButton size="small" color="success" onClick={() => guardarEdicion(r)} disabled={savingEdit}>
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                              <IconButton size="small" onClick={() => setEditingResultId(null)} disabled={savingEdit}>
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          ) : (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography sx={{ fontWeight: 700, color: porcentajeColor(porcentaje), minWidth: 70, textAlign: 'right' }}>
+                                {r.puntaje_obtenido}/{r.puntaje_total} ({porcentaje}%)
+                              </Typography>
+                              <Tooltip title="Ajustar calificación">
+                                <IconButton size="small" onClick={() => empezarEdicion(r)}>
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          )}
+                        </ListItem>
+                        {idx < examResults.length - 1 && <Divider component="li" />}
+                      </React.Fragment>
+                    );
+                  })}
+                </List>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={cerrarExamenesAlumno}>Cerrar</Button>
             </DialogActions>
           </>
         )}
