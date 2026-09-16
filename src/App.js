@@ -52,6 +52,19 @@ function getStoredRoute() {
   }
 }
 
+// Los enlaces de correo (notificaciones) traen ?goto=/ruta para abrir
+// directo en esa pantalla -- esta SPA no tiene router, así que se lee de
+// la URL una sola vez al montar, igual que ?reset_token=.
+function getInitialRoute() {
+  try {
+    const goto = new URLSearchParams(window.location.search).get('goto');
+    if (goto && VALID_ROUTES.includes(goto)) return goto;
+  } catch {
+    // ignorar y caer al valor guardado
+  }
+  return getStoredRoute();
+}
+
 // Tema verde moderno
 const theme = createTheme({
   palette: {
@@ -169,10 +182,19 @@ function App() {
   // Arranca en la última pantalla guardada: si el usuario recarga la
   // página (o falló una carga y refrescó), vuelve adonde estaba en vez
   // de mandarlo siempre al dashboard.
-  const [route, setRoute] = useState(getStoredRoute);
+  const [route, setRoute] = useState(getInitialRoute);
   // Última ruta VÁLIDA distinta de la actual -- a donde regresan los
   // botones "Regresar" de la pantalla 404 y del error boundary.
   const previousRouteRef = useRef('/dashboard');
+
+  // Si la URL trajo ?goto=..., ya se aplicó como ruta inicial (ver
+  // getInitialRoute); se limpia de la URL para que un refresh posterior no
+  // quede forzando esa misma pantalla una y otra vez.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has('goto')) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   // El enlace del correo de recuperación abre la app en la raíz con
   // ?reset_token=... (esta SPA no tiene rutas propias). Se lee una sola vez

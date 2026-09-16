@@ -893,5 +893,27 @@ export const examAssignmentService = {
   }
 };
 
+export const notificationService = {
+  getAll: async () => {
+    const response = await api.get('/notifications');
+    return response.data.data;
+  },
+
+  getUnreadCount: async () => {
+    const response = await api.get('/notifications/unread-count');
+    return response.data.data.count;
+  },
+
+  markRead: async (id) => {
+    const response = await api.patch(`/notifications/${id}/leer`);
+    return response.data;
+  },
+
+  markAllRead: async () => {
+    const response = await api.patch('/notifications/leer-todas');
+    return response.data;
+  }
+};
+
 export { api };
 export default api;

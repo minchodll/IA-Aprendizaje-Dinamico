@@ -19,6 +19,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import NotificationBell from './NotificationBell';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', permission: 'dashboard' },
@@ -123,26 +124,29 @@ const Sidebar = ({ onNavigate, user, hasPermission }) => {
       
       {/* Información del usuario */}
       <Box sx={{ p: 2, borderBottom: '1px solid rgba(255, 255, 255, 0.2)' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-          <Avatar 
-            sx={{ 
-              bgcolor: getRoleColor(user?.roles),
-              width: 40,
-              height: 40,
-              fontSize: '1rem',
-              fontWeight: 'bold'
-            }}
-          >
-            {user?.name?.charAt(0)?.toUpperCase() || <PersonIcon />}
-          </Avatar>
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#fff' }}>
-              {user?.name || 'Usuario'}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-              {getRoleDisplayName(user?.roles)}
-            </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, minWidth: 0 }}>
+            <Avatar
+              sx={{
+                bgcolor: getRoleColor(user?.roles),
+                width: 40,
+                height: 40,
+                fontSize: '1rem',
+                fontWeight: 'bold'
+              }}
+            >
+              {user?.name?.charAt(0)?.toUpperCase() || <PersonIcon />}
+            </Avatar>
+            <Box sx={{ minWidth: 0 }}>
+              <Typography variant="subtitle2" noWrap sx={{ fontWeight: 600, color: '#fff' }}>
+                {user?.name || 'Usuario'}
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                {getRoleDisplayName(user?.roles)}
+              </Typography>
+            </Box>
           </Box>
+          <NotificationBell onNavigate={onNavigate} />
         </Box>
       </Box>
 
