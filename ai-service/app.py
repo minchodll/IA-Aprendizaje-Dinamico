@@ -15,12 +15,19 @@ Contrato con el backend Node.js:
                "veces_fallada": 3, "excluir_ids": ["excel-3"] (opcional)}
         -> {"titulo", "descripcion", "contenido", "tipo", "prioridad", "ejercicios": [...]}
 
+    POST /tutor/preguntar
+        body: {"pregunta": "...", "categoria": "excel" (opcional)}
+        -> {"categoria", "nombre_tema", "respuesta", "confianza", "ejercicio_sugerido"}
+           (o {"mensaje": "..."} si no encontro nada suficientemente parecido)
+
 La clasificacion de categoria/dificultad a partir del texto libre del tema la
 hace TensorFlow (classifier.py); la seleccion de ejercicios en si viene del
 banco semilla (generator.py + bank_loader.py). La evaluacion de respuesta
 corta usa un embedder de TensorFlow entrenado sobre el banco (evaluator.py).
 Las recomendaciones de refuerzo (recommender.py) reusan esa misma seleccion
 del banco, dirigida a la categoria/nivel donde el alumno realmente falla.
+El tutor (tutor.py) reusa ese mismo embedder para responder preguntas del
+alumno con contenido real del banco, nunca texto generado libremente.
 
 Correr con:
     uvicorn app:app --reload --port 8500
@@ -37,6 +44,7 @@ import classifier
 import evaluator
 import generator
 import recommender
+import tutor
 
 app = FastAPI(title="Microservicio IA - Generacion y Evaluacion de Ejercicios")
 
@@ -61,6 +69,11 @@ class RecomendacionRequest(BaseModel):
     nivel: Optional[str] = None
     veces_fallada: int = 1
     excluir_ids: Optional[List[str]] = None
+
+
+class TutorRequest(BaseModel):
+    pregunta: str
+    categoria: Optional[str] = None
 
 
 @app.get("/health")
@@ -95,6 +108,13 @@ def recomendacion(req: RecomendacionRequest):
     return recommender.generar_recomendacion(
         req.categoria, req.nivel, req.veces_fallada, req.excluir_ids
     )
+
+
+# ---- Tutor con IA (ver tutor.py) ----
+
+@app.post("/tutor/preguntar")
+def tutor_preguntar(req: TutorRequest):
+    return tutor.responder_pregunta(req.pregunta, req.categoria)
 
 
 # ---- Plantilla para que un docente proponga un tema/ejercicios nuevos ----

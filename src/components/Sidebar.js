@@ -19,6 +19,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import NotificationBell from './NotificationBell';
 
 const menuItems = [
@@ -39,6 +40,7 @@ const menuItems = [
   { text: 'Mis Notas', icon: <AssessmentIcon />, path: '/my-grades', permission: 'take-exam' },
   { text: 'Mi Progreso', icon: <TrendingUpIcon />, path: '/my-progress', permission: 'take-exam' },
   { text: 'Mis Recomendaciones', icon: <LightbulbIcon />, path: '/my-recommendations', permission: 'take-exam' },
+  { text: 'Tutor con IA', icon: <SmartToyIcon />, path: '/ai-tutor', permission: 'take-exam' },
   { text: 'Preguntas Frecuentes', icon: <HelpOutlineIcon />, path: '/faq', permission: 'faq' },
 ];
 

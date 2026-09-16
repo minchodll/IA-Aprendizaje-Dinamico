@@ -23,6 +23,7 @@ import MyCourses from './components/MyCourses';
 import MyGrades from './components/MyGrades';
 import MyProgress from './components/MyProgress';
 import MyRecommendations from './components/MyRecommendations';
+import AiTutor from './components/AiTutor';
 import ClassReport from './components/ClassReport';
 import ExerciseBankUpload from './components/ExerciseBankUpload';
 import FAQ from './components/FAQ';
@@ -38,7 +39,7 @@ const VALID_ROUTES = [
   '/dashboard', '/students', '/teachers', '/grades', '/sections', '/subjects',
   '/topics', '/topic-templates', '/exams', '/questions', '/results',
   '/assignments', '/recommendations', '/exam-assignments', '/take-exam',
-  '/my-courses', '/my-grades', '/my-progress', '/my-recommendations', '/class-report',
+  '/my-courses', '/my-grades', '/my-progress', '/my-recommendations', '/ai-tutor', '/class-report',
   '/exercise-bank', '/faq'
 ];
 const LAST_ROUTE_KEY = 'last_route';
@@ -460,6 +461,9 @@ function App() {
               break;
             case '/my-recommendations':
               Content = hasPermission('take-exam') ? <MyRecommendations /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
+              break;
+            case '/ai-tutor':
+              Content = hasPermission('take-exam') ? <AiTutor /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;
               break;
             case '/class-report':
               Content = hasPermission('results') ? <ClassReport /> : <AccessDenied onGoBack={() => handleNavigate('/dashboard')} />;

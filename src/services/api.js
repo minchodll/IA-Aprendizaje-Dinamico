@@ -443,6 +443,11 @@ export const studentService = {
   completeRecommendation: async (id) => {
     const response = await api.patch(`/student/my-recommendations/${id}/completar`);
     return response.data;
+  },
+
+  preguntarTutor: async (pregunta, categoria) => {
+    const response = await api.post('/student/tutor', { pregunta, categoria });
+    return response.data.data;
   }
 };
 
