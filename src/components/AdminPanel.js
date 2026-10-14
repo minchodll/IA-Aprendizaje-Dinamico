@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { API_ORIGIN } from '../services/api';
 import {
   Box,
   Drawer,
@@ -13,8 +15,6 @@ import {
   ListItemIcon,
   ListItemText,
   Container,
-  Paper,
-  Grid,
   Card,
   CardContent,
   CardActions,
@@ -30,20 +30,11 @@ import {
   Security as SecurityIcon,
   CheckCircle as CheckIcon,
   ExitToApp as LogoutIcon,
-  AdminPanelSettings as AdminIcon,
-  Settings as SettingsIcon,
-  Assessment as AssessmentIcon,
-  Add as AddIcon,
-  Delete as DeleteIcon
+  AdminPanelSettings as AdminIcon
 } from '@mui/icons-material';
 import UserManagement from './UserManagement';
 import RoleManagement from './RoleManagement';
 import PermissionManagement from './PermissionManagement';
-import ClientManagement from './ClientManagement';
-import SupplierManagement from './SupplierManagement';
-import CategoryManagement from './CategoryManagement';
-import IncomeManagement from './IncomeManagement';
-import ExpenseManagement from './ExpenseManagement';
 
 const drawerWidth = 240;
 
@@ -76,13 +67,6 @@ const AdminPanel = ({ user, onLogout }) => {
     { text: 'Usuarios', icon: <PeopleIcon />, value: 'users' },
     { text: 'Roles', icon: <SecurityIcon />, value: 'roles' },
     { text: 'Permisos', icon: <CheckIcon />, value: 'permissions' },
-    { text: 'Clientes', icon: <PeopleIcon />, value: 'clients' },
-    { text: 'Proveedores', icon: <PeopleIcon />, value: 'suppliers' },
-    { text: 'Categorías', icon: <SettingsIcon />, value: 'categories' },
-    { text: 'Ingresos', icon: <AddIcon />, value: 'incomes' },
-    { text: 'Egresos', icon: <DeleteIcon />, value: 'expenses' },
-    { text: 'Reportes', icon: <AssessmentIcon />, value: 'reports' },
-    { text: 'Configuración', icon: <SettingsIcon />, value: 'settings' }
   ];
 
   const renderContent = () => {
@@ -93,19 +77,9 @@ const AdminPanel = ({ user, onLogout }) => {
         return <RoleManagement />;
       case 'permissions':
         return <PermissionManagement />;
-      case 'clients':
-        return <ClientManagement />;
-      case 'suppliers':
-        return <SupplierManagement />;
-      case 'categories':
-        return <CategoryManagement />;
-      case 'incomes':
-        return <IncomeManagement />;
-      case 'expenses':
-        return <ExpenseManagement />;
       case 'dashboard':
       default:
-        return <AdminDashboard user={user} />;
+        return <AdminDashboard onGo={setSelectedView} />;
     }
   };
 
@@ -229,98 +203,54 @@ const AdminPanel = ({ user, onLogout }) => {
   );
 };
 
-// Componente Dashboard para el panel administrativo
-const AdminDashboard = ({ user }) => {
+// Resumen del panel administrativo: cifras reales leidas de la base de datos
+const AdminDashboard = ({ onGo }) => {
+  const [datos, setDatos] = useState(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    axios.get(`${API_ORIGIN}/api/dashboard`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => setDatos(res.data.data))
+      .catch(() => setError(true));
+  }, []);
+
+  const tarjetas = [
+    { titulo: 'Usuarios', valor: datos?.total_users, destino: 'users' },
+    { titulo: 'Roles', valor: datos?.total_roles, destino: 'roles' },
+    { titulo: 'Permisos', valor: datos?.total_permissions, destino: 'permissions' },
+    { titulo: 'Alumnos', valor: datos?.total_students },
+    { titulo: 'Docentes', valor: datos?.total_teachers },
+    { titulo: 'Exámenes creados', valor: datos?.total_exams },
+    { titulo: 'Exámenes calificados', valor: datos?.total_results },
+  ];
+
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>
         Panel de Administración
       </Typography>
-      
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={3}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Usuarios Activos
-              </Typography>
-              <Typography variant="h4">
-                12
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => window.location.reload()}>
-                Ver Detalles
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={6} lg={3}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Roles Configurados
-              </Typography>
-              <Typography variant="h4">
-                5
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => window.location.reload()}>
-                Ver Detalles
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={6} lg={3}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Permisos Totales
-              </Typography>
-              <Typography variant="h4">
-                24
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => window.location.reload()}>
-                Ver Detalles
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={6} lg={3}>
-          <Card>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Sesiones Activas
-              </Typography>
-              <Typography variant="h4">
-                3
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => window.location.reload()}>
-                Ver Detalles
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
+      <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
+        Resumen del sistema. Desde el menú puedes gestionar usuarios, roles y permisos.
+      </Typography>
 
-        <Grid item xs={12}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Información del Sistema
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Bienvenido al panel de administración. Aquí puedes gestionar usuarios, roles y permisos del sistema.
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
+      {error && <Typography color="error" sx={{ mb: 2 }}>No se pudieron cargar las cifras.</Typography>}
+
+      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' } }}>
+        {tarjetas.map((t) => (
+          <Card key={t.titulo}>
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>{t.titulo}</Typography>
+              <Typography variant="h4">{datos ? t.valor : '…'}</Typography>
+            </CardContent>
+            {t.destino && (
+              <CardActions>
+                <Button size="small" onClick={() => onGo(t.destino)}>Ver detalles</Button>
+              </CardActions>
+            )}
+          </Card>
+        ))}
+      </Box>
     </Container>
   );
 };

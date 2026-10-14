@@ -475,7 +475,7 @@ function App() {
               Content = <FAQ />;
               break;
     default: 
-      Content = <Dashboard user={user} onLogout={handleLogout} />;
+      Content = <Dashboard user={user} onLogout={handleLogout} onNavigate={handleNavigate} hasPermission={hasPermission} />;
   }
 
   return (

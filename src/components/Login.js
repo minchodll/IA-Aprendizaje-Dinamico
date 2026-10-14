@@ -69,7 +69,6 @@ const Login = ({ onLoginSuccess }) => {
         setSuccess('Login exitoso!');
         
         // Guardar token y datos del usuario en localStorage
-        localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         
         // Llamar a la función de callback para actualizar el estado del padre
@@ -244,20 +243,22 @@ const Login = ({ onLoginSuccess }) => {
             </Button>
           </Box>
 
-          <Box sx={{ mt: 2, textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              Usuarios de prueba:
-            </Typography>
-            <Typography variant="caption" display="block" color="text.secondary">
-              Admin: admin@example.com / password123
-            </Typography>
-            <Typography variant="caption" display="block" color="text.secondary">
-              Manager: manager@example.com / password123
-            </Typography>
-            <Typography variant="caption" display="block" color="text.secondary">
-              User: user@example.com / password123
-            </Typography>
-          </Box>
+          {process.env.NODE_ENV !== 'production' && (
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                Usuarios de prueba:
+              </Typography>
+              <Typography variant="caption" display="block" color="text.secondary">
+                Admin: admin@example.com / password123
+              </Typography>
+              <Typography variant="caption" display="block" color="text.secondary">
+                Manager: manager@example.com / password123
+              </Typography>
+              <Typography variant="caption" display="block" color="text.secondary">
+                User: user@example.com / password123
+              </Typography>
+            </Box>
+          )}
           </>
           )}
         </Paper>

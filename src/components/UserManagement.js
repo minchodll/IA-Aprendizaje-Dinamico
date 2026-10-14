@@ -62,11 +62,11 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const response = await axios.get(`${API_ORIGIN}/api/users`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setUsers(response.data.users);
+      setUsers(response.data.data || []);
     } catch (err) {
       setError('Error al cargar usuarios: ' + (err.response?.data?.message || err.message));
     } finally {
@@ -76,11 +76,11 @@ const UserManagement = () => {
 
   const fetchRoles = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const response = await axios.get(`${API_ORIGIN}/api/roles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setRoles(response.data.roles);
+      setRoles(response.data.data || []);
     } catch (err) {
       console.error('Error al cargar roles:', err);
     }
@@ -128,7 +128,7 @@ const UserManagement = () => {
     setSuccess('');
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const headers = { 'Authorization': `Bearer ${token}` };
 
       if (editingUser) {
@@ -156,7 +156,7 @@ const UserManagement = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       await axios.delete(`${API_ORIGIN}/api/users/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -169,7 +169,7 @@ const UserManagement = () => {
 
   const handleAssignRole = async (userId, role) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       await axios.post(`${API_ORIGIN}/api/roles/assign`, {
         user_id: userId,
         role: role

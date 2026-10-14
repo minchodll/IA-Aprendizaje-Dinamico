@@ -62,11 +62,11 @@ const RoleManagement = () => {
 
   const fetchRoles = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const response = await axios.get(`${API_ORIGIN}/api/roles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setRoles(response.data.roles);
+      setRoles(response.data.data || []);
     } catch (err) {
       setError('Error al cargar roles: ' + (err.response?.data?.message || err.message));
     } finally {
@@ -76,11 +76,11 @@ const RoleManagement = () => {
 
   const fetchPermissions = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const response = await axios.get(`${API_ORIGIN}/api/permissions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setPermissions(response.data.permissions);
+      setPermissions(response.data.data || []);
     } catch (err) {
       console.error('Error al cargar permisos:', err);
     }
@@ -119,7 +119,7 @@ const RoleManagement = () => {
     setSuccess('');
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const headers = { 'Authorization': `Bearer ${token}` };
 
       if (editingRole) {
@@ -147,7 +147,7 @@ const RoleManagement = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       await axios.delete(`${API_ORIGIN}/api/roles/${roleId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });

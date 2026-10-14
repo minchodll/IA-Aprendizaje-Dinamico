@@ -26,15 +26,15 @@ const SECCIONES = [
       },
       {
         q: 'Creé un tema y el examen salió con "Pregunta 1", "Opción A, B, C, D" genéricas. ¿Qué pasó?',
-        a: 'El microservicio de IA (Python) no está corriendo. Cuando está caído, el sistema no avisa con un error grande — cae automáticamente a un examen de relleno para no dejarte sin nada. Solución: cerrá y volvé a abrir con "iniciar-todo.bat", confirmá que la ventana del microservicio de IA no se haya cerrado sola, y generá el examen de nuevo.',
+        a: 'El microservicio de IA (Python) no está corriendo. Cuando está caído, el sistema no avisa con un error grande — cae automáticamente a un examen de relleno para no dejarte sin nada. Solución: avisa al administrador para que reinicie el servicio de IA y vuelve a generar el examen. (En una instalación local: cierra y vuelve a abrir con "iniciar-todo.bat" y confirma que la ventana del microservicio de IA no se haya cerrado sola.)',
       },
       {
         q: 'No recuerdo la contraseña de un alumno o profesor que creé.',
         a: 'No hay forma de "ver" la contraseña (queda encriptada), pero sí se puede resetear: andá a Estudiantes o Profesores → editar esa persona → escribí una contraseña nueva en el campo Contraseña → Guardar. Si dejás ese campo vacío al editar, no le cambia la contraseña actual.',
       },
       {
-        q: '¿Con qué cuentas puedo entrar a probar el sistema?',
-        a: 'La pantalla de login muestra 3 cuentas de prueba abajo del formulario: admin@example.com, manager@example.com y user@example.com, todas con la contraseña password123.',
+        q: '¿Con qué cuenta entro al sistema?',
+        a: 'Con el correo y la contraseña que te entregó el administrador o tu docente. Si la olvidaste, en la pantalla de login usa "¿Olvidaste tu contraseña?" y te llegará un enlace al correo para crear una nueva.',
       },
     ],
   },

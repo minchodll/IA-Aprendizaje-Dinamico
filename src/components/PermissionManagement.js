@@ -70,11 +70,11 @@ const PermissionManagement = () => {
 
   const fetchPermissions = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const response = await axios.get(`${API_ORIGIN}/api/permissions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setPermissions(response.data.permissions);
+      setPermissions(response.data.data || []);
     } catch (err) {
       setError('Error al cargar permisos: ' + (err.response?.data?.message || err.message));
     } finally {
@@ -84,11 +84,11 @@ const PermissionManagement = () => {
 
   const fetchRoles = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const response = await axios.get(`${API_ORIGIN}/api/roles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setRoles(response.data.roles);
+      setRoles(response.data.data || []);
     } catch (err) {
       console.error('Error al cargar roles:', err);
     }
@@ -130,7 +130,7 @@ const PermissionManagement = () => {
     setSuccess('');
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const dataToSend = { ...formData, guard_name: 'web' };
@@ -160,7 +160,7 @@ const PermissionManagement = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       await axios.delete(`${API_ORIGIN}/api/permissions/${permissionId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
